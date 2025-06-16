@@ -1,0 +1,209 @@
+/* Movie Details Page Styles */
+body {
+    background-color: #f8f9fa;
+    font-family: "Effra", Tahoma, Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+
+
+.movie-details {
+    margin-top: 4rem;
+    /* زيادة الهامش العلوي لتعويض الشريط العلوي */
+
+    /* box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); */
+}
+
+.movie-image {
+    text-align: center;
+    padding: 15px;
+    /* margin-bottom: 2rem; */
+}
+
+.movie-image img {
+    border-radius: 15px;
+    /* Radius أكبر للصورة */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    /* ظل خلف الصورة */
+    max-width: 100%;
+    /* تأكد من أن الصورة لا تتجاوز عرض الحاوية */
+    height: auto;
+    /* الحفاظ على نسبة العرض إلى الارتفاع */
+}
+
+.movie-info {
+    padding: 15px;
+    /* إزالة الحشو الجانبي */
+}
+
+.movie-title {
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.movie-meta {
+    font-size: larger;
+    margin-bottom: 1.5rem;
+    display: flex;
+    /* استخدام flexbox لعرض العناصر بجانب بعضها */
+    flex-wrap: wrap;
+    /* السماح للعناصر بالانتقال إلى سطر جديد إذا لزم الأمر */
+}
+
+.movie-meta .badge i {
+    margin-right: 5px;
+    /* إضافة مسافة بين الأيقونة والنص */
+}
+
+.movie-meta .badge {
+    margin: 0.25rem 0.5rem;
+    /* هوامش حول العناصر */
+}
+
+.movie-summary {
+    text-align: justify;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    padding: 10px;
+}
+
+.movie-cast,
+.movie-categories {
+    margin-bottom: 1rem;
+}
+
+hr.dashed {
+    border-top: 2px dashed #000;
+    /* تغيير لون وسمك الداشات حسب الحاجة */
+    border-bottom: none;
+    /* لإزالة الخط السفلي */
+}
+
+/* تنسيق Showtimes بشكل أفضل */
+.showtimes {
+    margin-top: 2rem;
+}
+
+.showtimes h2 {
+    margin-bottom: 1rem;
+    font-family: monospace;
+
+}
+
+.showtime-item .highlight {
+    background-color: #009ddb;
+    background-color: var(--color-heading-highlight);
+    content: "";
+    display: block;
+    height: 3px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 60px;
+}
+
+.showtimes-list {
+    display: grid;
+    /* استخدام grid لعرض Showtimes بشكل جميل */
+    grid-template-columns: repeat(max-width(50px), minmax(250px, 1fr));
+    /* أعمدة مرنة */
+    gap: 1rem;
+    /* تباعد بين العناصر */
+}
+
+.showtime-item {
+    padding: 1rem;
+
+    box-shadow: 0px 2px 0px 0px #7f9dd0;
+}
+
+.showtime-item strong {
+    display: block;
+    /* عرض التاريخ والوقت في سطر جديد */
+    margin-bottom: 0.5rem;
+}
+
+/* شريط الأفلام القريبة */
+.related-movies {
+    margin-top: 2rem;
+}
+
+.related-movies h2 {
+    margin-bottom: 1rem;
+}
+
+.related-movies-slider {
+    overflow-x: auto;
+    /* تمكين التمرير الأفقي */
+    white-space: nowrap;
+    /* منع العناصر من الانتقال إلى سطر جديد */
+}
+
+.related-movies-slider .movie-card {
+    display: inline-block;
+    /* عرض العناصر بجانب بعضها */
+    margin-right: 1rem;
+    width: 200px;
+    /* عرض ثابت للبطاقات */
+}
+
+/* تعديلات الاستجابة */
+@media (max-width: 768px) {
+    .movie-info {
+        padding: 0;
+        margin-top: 2rem;
+    }
+
+}
+
+/* Related Movies Slider */
+.related-movies-slider {
+    overflow-x: auto;
+    /* Enable horizontal scrolling */
+    white-space: nowrap;
+    /* Prevent items from wrapping */
+}
+
+.related-movies-slider .movie-card {
+    display: inline-block;
+    /* Arrange items horizontally */
+    margin-right: 10px;
+    /* Spacing between items */
+    width: 200px;
+    /* Adjust width as needed */
+    border: 1px solid #ddd;
+    /* Example border */
+    border-radius: 8px;
+    /* Example border radius */
+    overflow: hidden;
+    /* Hide overflowing content (like long titles) */
+}
+
+.movie-card img {
+    width: 100%;
+    height: auto;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.movie-card .card-body {
+    padding: 10px;
+}
+
+.movie-card .card-title {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.movie-card .card-text {
+    font-size: 14px;
+}
+
+p {
+    font-size: larger;
+    margin-top: 30px;
+    margin-bottom: 2rem;
+}
+
+/* ... other CSS ... */

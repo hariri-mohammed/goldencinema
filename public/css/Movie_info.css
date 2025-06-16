@@ -1,0 +1,179 @@
+/* #movie_list {
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-around;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 20px 10px;
+}
+
+.content-list .container .list-items img {
+    width: 100px;
+    border-radius: 10px;
+}
+
+.content-list .container .list-items h2 {
+    margin-top: 10px;
+    font-weight: 600;
+    color: var(--main-color);
+}
+
+.content-list .container .list-items .icon a {
+    text-decoration: none;
+}
+
+.content-list .container .list-items .icon i {
+    font-size: 30px;
+    margin: 0px 10px;
+    color: #CCC;
+
+}
+
+#delete i:hover {
+    color: red;
+}
+
+
+#edit i:hover {
+    color: darkblue;
+}
+
+#show i:hover {
+    color: rgb(22, 148, 15);
+}
+
+.no-data {
+    width: 100%;
+    height: calc(100vh - 172px);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+
+}
+
+.my-btn {
+    border: none;
+    background: none;
+    outline: none;
+}
+
+.no-data p {
+    font-size: 40px;
+    color: var(--second-color);
+    font-weight: 900;
+    font-family: 'Quicksand', sans-serif;
+}
+
+.list-items {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.list-items h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    word-wrap: break-word;
+    /* لضمان عدم تداخل النصوص الطويلة
+}
+
+.list-items p {
+    margin: 5px 0;
+    word-wrap: break-word;
+}
+
+.list-items .icon {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.list-items:hover {
+    transform: scale(1.02);
+}
+
+.no-data {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.2em;
+    color: #555;
+} */
+
+
+.container1 {
+
+    border-radius: 15px;
+    /* حواف مقعرة قليلاً */
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+    /* ظل خفيف */
+    background-color: #ffffff;
+    /* خلفية بيضاء */
+    padding: 10px;
+    /* مسافة داخلية */
+    margin: 2rem
+}
+
+.container1 h2 {
+    padding-top: 20px;
+    font-weight: 700;
+    color: var(--second-color);
+}
+
+.card-body1 {
+    padding-left: 15px;
+}
+
+.card-title1 {
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: var(--darcker-color);
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.card-text1 {
+    margin-bottom: 10px;
+}
+
+.text-red {
+    color: red;
+    font-weight: bold;
+
+}
+
+img {
+    border-radius: 10px;
+    /* حواف مقعرة للصورة */
+    max-width: 100%;
+    /* تقليل حجم الصورة لتناسب الحاوية */
+    height: auto;
+    /* الحفاظ على نسبة العرض إلى الارتفاع */
+}
+
+.container1 .btn {
+    color: white;
+    background-color: var(--second-color);
+    font-weight: 600;
+    border: none;
+    width: 120px;
+    height: 40px;
+    padding: 7px;
+    margin: -4px;
+    font-size: 18px;
+
+}
+
+.container1 .btn:hover {
+    background-color: var(--darcker-color);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+}

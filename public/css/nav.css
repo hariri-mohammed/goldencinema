@@ -1,0 +1,68 @@
+/* Navbar Styles */
+.navbar {
+    position: fixed;
+    /* ثابتة في أعلى الصفحة */
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    /* تأكد من بقاءها في المقدمة */
+    background-color: #ffffff;
+    /* لون الخلفية */
+    border-bottom: 1px solid #ddd;
+    /* خط الأسفل */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* ظل خفيف */
+}
+
+.nav-link {
+    color: #333;
+    /* لون النص */
+    padding: 10px 15px;
+    text-decoration: none;
+    /* إزالة التسطير */
+    font-weight: 500;
+    /* زيادة سماكة النص */
+    transition: color 0.3s;
+    /* تأثير الانتقال عند تغيير اللون */
+}
+
+.nav-link:hover {
+    color: #007bff;
+    /* تغيير اللون عند التحويم */
+}
+
+.nav-link.active {
+    color: #007bff;
+    /* لون الرابط النشط */
+}
+
+.nav-logo {
+    max-height: 40px;
+    /* ضبط حجم الشعار */
+}
+
+/* Responsive Menu */
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+        /* إخفاء القائمة في الشاشات الصغيرة */
+    }
+
+    .nav-menu.open {
+        display: block;
+        /* عرض القائمة عند الفتح */
+        background-color: #ffffff;
+        /* لون خلفية القائمة */
+        padding: 10px;
+        /* المسافة بين العناصر */
+        border-top: 1px solid #ddd;
+        /* خط أعلى القائمة */
+    }
+
+    .nav-link {
+        display: block;
+        /* عرض الروابط كعناصر منفصلة */
+        padding: 10px;
+        /* المسافة حول الروابط */
+    }
+}

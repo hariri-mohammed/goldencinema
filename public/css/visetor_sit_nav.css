@@ -1,0 +1,100 @@
+:root {
+    --main-color: #1e222e;
+    --second-color: #ff9e1b;
+    --darker-color: #e4e43a;
+}
+
+.bg-main-color {
+    background-color: var(--main-color);
+}
+
+.bg-second-color {
+    background-color: var(--second-color);
+}
+
+.bg-darker-color {
+    background-color: var(--darker-color);
+}
+
+.text-second-color {
+    color: var(--second-color);
+}
+
+.text-darker-color {
+    color: var(--darker-color);
+}
+
+.hover\:text-second-color:hover {
+    color: var(--second-color);
+}
+
+.hover\:text-darker-color:hover {
+    color: var(--darker-color);
+}
+
+/* أنماط النافذة المنبثقة */
+.login-modal-overlay {
+    visibility: hidden;
+    opacity: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.login-modal-overlay.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+.login-modal-content {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    padding: 2rem;
+    border-radius: 8px;
+    position: relative;
+}
+
+.mobile-menu {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 35%;
+    background: white;
+    z-index: 1000;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.mobile-menu a.active {
+    color: blue;
+}
+
+/* أنماط إضافية */
+.nav-icon {
+    color: var(--second-color);
+}
+
+.nav-icon:hover {
+    color: var(--darker-color);
+}
+
+#profile {
+    width: fit-content;
+}
+
+.client {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+
+}

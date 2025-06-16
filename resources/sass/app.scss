@@ -1,0 +1,11 @@
+@import 'bootstrap/scss/bootstrap';
+@import '@fortawesome/fontawesome-free/css/fontawesome.css';
+@import '@fortawesome/fontawesome-free/css/regular.css';
+@import '@fortawesome/fontawesome-free/css/solid.css';
+@import '@fortawesome/fontawesome-free/css/brands.css';
+
+.alert alert-success {
+    width: fit-content;
+    margin-top: 30px;
+    justify-self: center;
+}

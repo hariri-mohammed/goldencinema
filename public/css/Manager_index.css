@@ -1,0 +1,21 @@
+/* Start Welcome Section */
+.welcome-section {
+    min-height: calc(100vh - 86px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.custom-img {
+    width: 100px !important;
+    height: 100px !important;
+
+}
+
+.welcome-section h1 {
+    color: #1e222efd;
+}
+
+/* End Welcome Section */

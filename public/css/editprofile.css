@@ -1,0 +1,133 @@
+:root {
+    --main-color: #1e222efd;
+    --second-color: #ff9e1b;
+    --darcker-color: #e6ee0d;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: var(--main-color);
+    font-family: 'Quicksand', sans-serif;
+}
+
+.rows {
+    margin: 0;
+    width: 90%;
+    margin-left: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+@media (max-width: 800px) {
+    .rows {
+        flex-direction: column;
+        margin-top: 0;
+    }
+}
+
+.line {
+    display: block;
+    width: 200px;
+    background-color: var(--second-color);
+    height: 2px;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 5px);
+}
+
+.circle {
+    border-radius: 50%;
+    border: 2px solid var(--second-color);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+
+.under-nav {
+    min-height: calc(100vh - 86px);
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.under-nav .info-container {
+    max-width: 850px;
+    width: 96%;
+    min-height: 400px;
+    background: #fff;
+    border-radius: 7px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.info-container .main-title .my-icon {
+    display: flex;
+    justify-content: center;
+}
+
+.info-container .main-title .my-icon .circle {
+    height: 100px;
+    width: 100px;
+}
+
+.info-container .main-title .my-icon .circle i {
+    color: var(--second-color);
+}
+
+.info-container .row1 .title-field {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.info-container .rows .title-field .circle {
+    height: 50px;
+    width: 50px;
+}
+
+.info-container .rows .title-field .circle i {
+    color: var(--second-color);
+    font-size: 25px;
+}
+
+.info-container .rows .title-field h4 {
+    font-weight: 600;
+}
+
+.info-container .rows .info-field p {
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.info-container .my-button a i {
+    margin-right: 5px;
+}
+
+#titel {
+    display: ruby;
+}
+
+.alert {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}

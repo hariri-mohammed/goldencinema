@@ -1,0 +1,252 @@
+/* تنسيقات مخصصة */
+body {
+    padding-top: 90px;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+}
+
+.movie-card {
+    background: white;
+    border: none;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 2px 9px rgba(0, 0, 0, 0.25);
+}
+
+.movie-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+
+    border-radius: 0px 0px 25px 25px;
+
+}
+
+
+.card-body {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+}
+
+.card-title {
+    margin-bottom: 10px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    /* عرض سطرين فقط */
+    -webkit-box-orient: vertical;
+}
+
+.movie-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+    transition: all 0.3s ease;
+}
+
+/* تنسيقات الكرسيّل */
+.carousel-container {
+    padding: 30px 10px 10px;
+    margin-bottom: 2rem;
+}
+
+.carousel-item img {
+    height: 340px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    margin: 0 5px;
+    transition: transform 0.3s ease;
+}
+
+.carousel-item img:hover {
+    transform: scale(1.02);
+}
+
+/* الشبكة المتجاوبة */
+.movies-grid>div {
+    display: flex;
+    padding: 5px;
+}
+
+#no-results-message {
+    max-width: none;
+    margin: 13px;
+    flex: auto;
+}
+
+@media (min-width: 1200px) {
+    .movies-grid>div {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .movies-grid>div {
+        flex: 0 0 33.3333%;
+        max-width: 33.3333%;
+    }
+}
+
+
+
+@media (max-width: 991px) {
+    .movies-grid>div {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+/* أزرار الفلترة (Chips) */
+.chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 16px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.chip:hover {
+    background-color: #e0e0e0;
+}
+
+.chip.active {
+    background-color: #2196f3;
+    color: #fff;
+}
+
+.chip-label {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* فلتر الفئات */
+.category-select {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 12px;
+    /* أزلت margin-left: auto؛ لضمان التناسق */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s;
+    position: relative;
+    margin-left: 0;
+}
+
+.category-select:hover {
+    background-color: #e0e0e0;
+}
+
+.category-label {
+    color: #2196f3;
+    /* لون أزرق */
+    font-weight: bold;
+    /* خط أعرض */
+    margin-right: 5px;
+}
+
+.category-select .arrow-down {
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+.category-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    list-style: none;
+    margin-top: 5px;
+    padding: 0;
+    width: 230px;
+    /* زيادة العرض لاستيعاب مربعات الاختيار */
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+}
+
+.category-options li {
+    padding: 8px 12px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.category-options li:hover {
+    background-color: #2196f3;
+}
+
+.category-options li.selected {
+    background-color: #2196f3;
+}
+
+.show {
+    display: block !important;
+}
+
+.button-group {
+    margin-inline-start: auto;
+}
+
+/* تنسيقات متجاوبة */
+@media (max-width: 490px) {
+    .filter-section .d-flex {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .category-select {
+        margin-left: 0;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .button-group {
+        margin-left: 0;
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 10px;
+        justify-content: center;
+    }
+}
+
+.no-results-message {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    /* يمكنك تعديل الارتفاع حسب رغبتك */
+    text-align: center;
+    background-color: #f8f9fa;
+    /* لون خلفية خفيف */
+    border-radius: 10px;
+    /* حواف مستديرة */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* ظل */
+    transition: all 0.3s ease;
+    /* انتقال ناعم */
+}
+
+.no-results-message h4 {
+    font-size: 24px;
+    /* حجم الخط */
+    color: #6c757d;
+    /* لون النص */
+}

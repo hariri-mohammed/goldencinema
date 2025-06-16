@@ -1,0 +1,161 @@
+@extends('layouts.manager')
+
+@section('content')
+<div class="container-fluid px-4 py-5">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-4 rounded-lg shadow-sm">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-tv text-primary me-2"></i>
+            Screens - {{ $theater->location }}
+        </h1>
+        <a href="{{ route('manager.theaters.screens.create', $theater->id) }}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i> Add New Screen
+        </a>
+    </div>
+
+    <!-- Alert Messages -->
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    <!-- Screens Table -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white py-3">
+            <h6 class="m-0 font-weight-bold">
+                <i class="fas fa-list me-2"></i>
+                All Screens
+            </h6>
+        </div>
+        <div class="card-body bg-white">
+            @if ($screens->count() > 0)
+                <div class="table-responsive">
+                    <table class="table table-hover" width="100%" cellspacing="0">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="text-gray-700">#</th>
+                                <th class="text-gray-700">Screen Name</th>
+                                <th class="text-gray-700">Screen Number</th>
+                                <th class="text-gray-700">Status</th>
+                                <th class="text-gray-700">Seats Count</th>
+                                <th class="text-gray-700 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($screens as $screen)
+                                <tr>
+                                    <td class="align-middle">{{ $loop->iteration }}</td>
+                                    <td class="align-middle">{{ $screen->screen_name }}</td>
+                                    <td class="align-middle">{{ $screen->screen_number }}</td>
+                                    <td class="align-middle">
+                                        <span class="badge bg-{{ $screen->status === 'active' ? 'success' : ($screen->status === 'maintenance' ? 'warning' : 'danger') }}">
+                                            {{ ucfirst($screen->status) }}
+                                        </span>
+                                    </td>
+                                    <td class="align-middle">{{ $screen->seats_count }}</td>
+                                    <td class="align-middle text-center">
+                                        <div class="btn-group" role="group">
+                                            <!-- Add Seats Button -->
+                                            <a href="{{ route('manager.theaters.screens.seats.index', [$theater->id, $screen->id]) }}"
+                                                class="btn btn-info btn-sm text-white" title="Manage Seats">
+                                                <i class="fas fa-chair"></i>
+                                            </a>
+                                            <!-- Edit Button -->
+                                            <a href="{{ route('manager.theaters.screens.edit', [$theater->id, $screen->id]) }}"
+                                                class="btn btn-primary btn-sm" title="Edit Screen">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <!-- Delete Button -->
+                                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                                data-bs-target="#m{{ $screen->id }}" title="Delete Screen">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Delete Modal -->
+                                <div class="modal fade" id="m{{ $screen->id }}" tabindex="-1"
+                                    aria-labelledby="Label" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-danger text-white py-3">
+                                                <h5 class="modal-title" id="Label">Delete Screen <strong class="text-warning">{{ $screen->screen_name }}</strong></h5>
+                                                <button type="button" class="btn-close btn-close-white"
+                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-gray-800">
+                                                <p>Are you sure you want to delete screen
+                                                    <strong>{{ $screen->screen_name }}</strong>?
+                                                </p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Cancel</button>
+                                                <form
+                                                    action="{{ route('manager.theaters.screens.destroy', [$theater->id, $screen->id]) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <div class="text-center py-4">
+                    <div class="text-gray-500">
+                        <i class="fas fa-tv fa-3x mb-3"></i>
+                        <p class="mb-0">No screens available for this theater</p>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
+
+    <!-- Back Link -->
+    <div class="text-center mt-4">
+        <a href="{{ route('manager.theaters.index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>
+            Back to Theaters List
+        </a>
+    </div>
+</div>
+
+@push('styles')
+<style>
+    .btn-group .btn {
+        margin: 0 2px;
+    }
+    .table th {
+        font-weight: 600;
+    }
+    .badge {
+        font-size: 0.85rem;
+    }
+    .modal-title {
+        font-weight: 600;
+    }
+    .modal-header .btn-close {
+        filter: invert(1);
+    }
+    .form-label {
+        font-weight: 500;
+    }
+    .card {
+        border-radius: 0.5rem;
+    }
+    .card-header {
+        border-radius: 0.5rem 0.5rem 0 0 !important;
+    }
+</style>
+@endpush
+@endsection

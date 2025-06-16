@@ -1,0 +1,45 @@
+body {
+    background-color: #000;
+    color: #fff;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.card {
+    background-color: #333;
+    color: #fff;
+}
+
+.btn-outline-light {
+    color: #fff;
+    border-color: #fff;
+}
+
+.btn-outline-light:hover {
+    color: #000;
+    background-color: #fff;
+    border-color: #fff;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.form-select {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #fff;
+}
+
+.form-select option {
+    background-color: #333;
+    color: #fff;
+}

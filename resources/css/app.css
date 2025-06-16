@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --main-color: #1e222efd;
+    --second-color: #ff9e1b;
+    --darcker-color: #e4e43a;
+}
+
+
+#nav {
+    width: 100%;
+    max-width: 100%;
+    background-color: var(--main-color);
+
+}
+
+#nav2 {
+    width: 100%;
+    max-width: 100%;
+    background-color: var(--main-color);
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+    border-radius: 0 0 20px 20px;
+}
+
+#nav3 {
+    width: 100%;
+    max-width: 100%;
+    background-color: var(--main-color);
+    display: flex;
+    justify-content: space-around;
+    padding: 0;
+    border-radius: 0 0 20px 20px;
+}
+
+#nav .logo img {
+    height: 64px;
+    width: 120px;
+    margin-right: 20px;
+}
+
+
+.border-indigo-400 {
+
+    --tw-border-opacity: 1;
+    border-color: var(--second-color);
+    border-width: 0px 0px 5px 0px;
+}
+
+#list-btn {
+    background-color: var(--second-color);
+    color: white;
+    font-weight: bolder;
+}
+
+#list-btn:hover {
+    background-color: var(--darcker-color);
+    /* تغيير لون الخلفية عند التمرير */
+}
+
+#list a {
+    color: rgb(252, 249, 249);
+    font-size: larger;
+    font-weight: bolder;
+    text-decoration: none;
+    background-color: transparent;
+    border-radius: 2px;
+    /* إضافة زاوية مستديرة */
+}
+
+#list a.active {
+    background-color: var(--second-color);
+    /* لون الخلفية عند التفعيل */
+    color: rgb(252, 249, 249);
+    /* لون النص عند التفعيل */
+}
+
+#list a:hover {
+    background-color: var(--darcker-color);
+    /* تغيير لون الخلفية عند التمرير */
+}
+
+/* hidden */
+#hidden #list {
+    /* display: inline-grid;
+    justify-content: center; */
+    display: flex;
+    flex-wrap: wrap;
+
+}
+
+#hidden #list>* {
+    flex: 1 1 30%;
+    /* كل عنصر سيأخذ 30% من عرض السطر، مما يسمح بوضع 3 عناصر في السطر الواحد */
+    box-sizing: border-box;
+    /* لتجنب تجاوز الحدود */
+    padding: 8px;
+    /* يمكنك تعديل القيم بناءً على الحاجة */
+}
+
+#hidden #list a {
+    color: black;
+    display: flex;
+    justify-content: space-around;
+    border: 0px solid #ccc;
+    box-shadow: 0px 4px 2px rgba(0, 0, 0, 0.25);
+    /* إضافة ظل حول العنصر */
+}
+
+
+
+
+.hidden {
+    display: none;
+}
+
+@media (min-width: 820px) {
+    .smk\:items-center {
+        align-items: center;
+    }
+}
+
+@media (min-width: 820px) {
+    .smk\:flex {
+        display: flex;
+    }
+}
+
+@media (min-width: 820px) {
+    .smk\:ms-6 {
+        margin-inline-start: 1.5rem;
+    }
+}
+
+@media (min-width: 820px) {
+    .smk\:hidden {
+        display: none;
+    }
+}
+
+@media (min-width: 820px) {
+    .smkm\:flex {
+        display: flex;
+    }
+}
+
+@media (min-width: 8200px) {
+    .smkm\:ms-10 {
+        margin-inline-start: 2.5rem;
+    }
+}
+
+@media (min-width: 820px) {
+    .smkm\:-my-px {
+        margin-top: -1px;
+        margin-bottom: -1px;
+    }
+}

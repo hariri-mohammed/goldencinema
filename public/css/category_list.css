@@ -1,0 +1,173 @@
+/* :root {
+    --main-color: #1e222efd;
+    --second-color: #ff9e1b;
+    --darcker-color: #e6ee0d;
+} */
+
+body {
+    background-color: white;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.content-list .container {
+    margin-top: 40px;
+
+}
+
+.content-list .alert {
+    font-size: 20;
+    width: fit-content;
+    margin-top: 30px;
+    justify-self: center;
+    font-weight: bolder;
+}
+
+.content-list .container .list-items {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    justify-content: space-around;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 20px 10px;
+}
+
+/* in movie list img tage */
+#movie_list {
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-around;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 20px 10px;
+}
+
+.content-list .container .list-items img {
+    width: 100px;
+    border-radius: 10px;
+}
+
+.content-list .container .list-items h2 {
+    margin-top: 10px;
+    font-weight: 600;
+    color: var(--main-color);
+}
+
+.content-list .container .list-items .icon a {
+    text-decoration: none;
+}
+
+.content-list .container .list-items .icon i {
+    font-size: 30px;
+    margin: 0px 10px;
+    color: #CCC;
+
+}
+
+#delete i:hover {
+    color: red;
+}
+
+
+#edit i:hover {
+    color: darkblue;
+}
+
+#show i:hover {
+    color: rgb(22, 148, 15);
+}
+
+.no-data {
+    width: 100%;
+    height: calc(100vh - 172px);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+
+}
+
+.my-btn {
+    border: none;
+    background: none;
+    outline: none;
+}
+
+.no-data p {
+    font-size: 40px;
+    color: var(--second-color);
+    font-weight: 900;
+    font-family: 'Quicksand', sans-serif;
+}
+
+.list-items {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.list-items h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    word-wrap: break-word;
+    /* لضمان عدم تداخل النصوص الطويلة */
+}
+
+.list-items p {
+    margin: 5px 0;
+    word-wrap: break-word;
+}
+
+.list-items .icon {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.list-items:hover {
+    transform: scale(1.02);
+}
+
+.no-data {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.2em;
+    color: #555;
+}
+
+.no-results-message {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    /* يمكنك تعديل الارتفاع حسب رغبتك */
+    text-align: center;
+    background-color: #f8f9fa;
+    /* لون خلفية خفيف */
+    border-radius: 10px;
+    /* حواف مستديرة */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* ظل */
+    transition: all 0.3s ease;
+    /* انتقال ناعم */
+}
+
+.no-results-message h4 {
+    font-size: 24px;
+    /* حجم الخط */
+    color: #6c757d;
+    /* لون النص */
+}
