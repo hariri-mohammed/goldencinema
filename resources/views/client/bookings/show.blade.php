@@ -4,6 +4,13 @@
 
 @section('content')
 <div class="container mt-5">
+    <!-- Back Button -->
+    <div class="mb-3">
+        <a href="{{ route('client.bookings.index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to My Bookings
+        </a>
+    </div>
+
     <div class="card shadow-lg">
         <div class="card-header bg-primary text-white">
             <h2 class="mb-0">Booking Details</h2>
@@ -27,6 +34,7 @@
                             {{ ucfirst($booking->status) }}
                         </span>
                     </p>
+                    
                     <p><strong>Number of Tickets:</strong> {{ $booking->number_of_tickets }}</p>
                     <p><strong>Total Price:</strong> ${{ number_format($booking->total_price, 2) }}</p>
                 </div>
@@ -59,31 +67,17 @@
                     </table>
                 </div>
             </div>
-
-            @if($booking->status === 'pending')
-            <div class="mt-4">
-                <h3>Payment Information</h3>
-                <p class="text-muted">Please complete the payment to confirm your booking.</p>
-                <form action="{{ route('client.bookings.pay', $booking) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-primary">Proceed to Payment</button>
-                </form>
-            </div>
-            @endif
-
-            <div class="mt-4">
-                <a href="{{ route('client.bookings.index') }}" class="btn btn-secondary">Back to Bookings</a>
-                @if($booking->status === 'pending')
-                <form action="{{ route('client.bookings.cancel', $booking) }}" method="POST" class="d-inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this booking?')">
-                        Cancel Booking
-                    </button>
-                </form>
-                @endif
-            </div>
         </div>
     </div>
+
+    <!-- Download Ticket Button -->
+    <div class="text-center mt-4">
+    @if($booking->tickets->count())
+            <a href="{{ route('client.tickets.download', $ticket->id) }}" class="btn btn-success btn-lg mb-2">
+                <i class="fas fa-download"></i> Download Ticket PDF 
+            </a>
+        @endif
+    </div>
 </div>
+
 @endsection 

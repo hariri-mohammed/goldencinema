@@ -31,7 +31,7 @@ class TrailerController extends Controller
         Trailer::create($request->all());
 
         return redirect()->route('manager.trailers.index')
-            ->with('success', 'تم إضافة التريلر بنجاح');
+            ->with('success', 'Trailer added successfully');
     }
 
     public function edit($id)
@@ -50,7 +50,7 @@ class TrailerController extends Controller
         $trailer->update($request->all());
 
         return redirect()->route('manager.trailers.index')
-            ->with('success', 'تم تحديث التريلر بنجاح');
+            ->with('success', 'Trailer updated successfully');
     }
 
     public function destroy($id)
@@ -59,6 +59,6 @@ class TrailerController extends Controller
         $trailer->delete();
 
         return redirect()->route('manager.trailers.index')
-            ->with('success', 'تم حذف التريلر بنجاح');
+            ->with('success', 'Trailer deleted successfully');
     }
 }

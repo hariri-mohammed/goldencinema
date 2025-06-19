@@ -23,6 +23,8 @@ class CreateMoviesTable extends Migration
             $table->binary('img'); // عمود لتخزين الصورة
             $table->string('stars'); // عمود لتخزين أسماء النجوم
             $table->text('summary');
+            $table->string('country');
+            $table->foreignId('status_id')->constrained('statuses')->onDelete('cascade');
             $table->timestamps();
         });
     }

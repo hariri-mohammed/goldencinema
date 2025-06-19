@@ -21,7 +21,7 @@
         </div>
         <div class="form-box w-100 w-md-50">
 
-            <form method="POST" action="{{ route('admin_login') }}">
+            <form method="POST" action="{{ route('admin_login_post') }}">
                 @csrf
                 <div class="logo text-center mt-4">
                     <img src="{{ asset('img/Logo.PNG') }}" alt="">

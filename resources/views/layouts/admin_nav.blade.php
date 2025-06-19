@@ -25,6 +25,11 @@
                     <x-nav-link :href="route('admin.managers.index')" :active="request()->routeIs('admin.managers.index') ? 'active' : ''">
                         {{ __(' Managers') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard') ? 'active' : ''">
+                        {{ __(' Dashboard') }}
+                    </x-nav-link>
+
                 </div>
 
             </div>

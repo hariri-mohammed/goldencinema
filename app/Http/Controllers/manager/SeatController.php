@@ -113,42 +113,144 @@ class SeatController extends Controller
         }
     }
 
-    public function edit($theaterId, $screenId, $seatId)
+    public function edit($theaterId, $screenId)
     {
-        $seat = Seat::findOrFail($seatId);
-        return view('manager.seats.edit', compact('seat'));
+        $screen = Screen::findOrFail($screenId);
+        $seatData = [
+            'rows' => 0,
+            'seats_per_row' => 0,
+            'row_start' => 'A',
+            'aisle_count' => 0,
+            'aisle_start' => [],
+            'aisle_width' => []
+        ];
+
+        $existingSeats = $screen->seats()->orderBy('row')->orderBy('number')->get();
+
+        if ($existingSeats->isNotEmpty()) {
+            $minRowChar = $existingSeats->min('row');
+            $maxRowChar = $existingSeats->max('row');
+            
+            $seatData['row_start'] = $minRowChar;
+            $seatData['rows'] = ord($maxRowChar) - ord($minRowChar) + 1;
+            
+            $seatsInRows = $existingSeats->where('type', '!=', 'aisle')->groupBy('row')->map(function ($rowSeats) {
+                return $rowSeats->max('number');
+            });
+            $seatData['seats_per_row'] = $seatsInRows->max();
+            
+            $aisles = [];
+            $sampleRowSeats = $existingSeats->groupBy('row')->first();
+            if ($sampleRowSeats) {
+                $currentAisleStart = null;
+                $currentAisleWidth = 0;
+                foreach ($sampleRowSeats->sortBy('number') as $seat) {
+                    if ($seat->type === 'aisle') {
+                        if ($currentAisleStart === null) {
+                            $currentAisleStart = $seat->number;
+                        }
+                        $currentAisleWidth++;
+                    } else {
+                        if ($currentAisleStart !== null) {
+                            $aisles[] = ['start' => $currentAisleStart, 'width' => $currentAisleWidth];
+                            $currentAisleStart = null;
+                            $currentAisleWidth = 0;
+                        }
+                    }
+                }
+                if ($currentAisleStart !== null) {
+                    $aisles[] = ['start' => $currentAisleStart, 'width' => $currentAisleWidth];
+                }
+            }
+            
+            $seatData['aisle_count'] = count($aisles);
+            $seatData['aisle_start'] = array_column($aisles, 'start');
+            $seatData['aisle_width'] = array_column($aisles, 'width');
+        }
+
+        $seat = (object) $seatData;
+
+        return view('manager.seats.edit', compact('screen', 'seat'));
     }
 
-    public function update(Request $request, $theaterId, $screenId, $seatId)
+    public function update(Request $request, $theaterId, $screenId)
     {
         $request->validate([
-            'type' => 'sometimes|required|in:standard,vip,wheelchair',
-            'status' => 'sometimes|required|in:active,maintenance,inactive',
+            'rows' => 'required|integer|min:1',
+            'seats_per_row' => 'required|integer|min:1',
+            'row_start' => 'required|string|size:1|regex:/^[A-Za-z]$/',
+            'aisle_count' => 'required|integer|min:0',
+            'aisle_start' => 'array',
+            'aisle_width' => 'array',
+            'aisle_start.*' => 'required_with:aisle_count|integer|min:1',
+            'aisle_width.*' => 'required_with:aisle_count|integer|min:1'
         ]);
 
         try {
-            $seat = Seat::findOrFail($seatId);
-            $updates = [];
+            DB::beginTransaction();
 
-            if ($request->has('type')) {
-                $updates['type'] = $request->type;
+            $screen = Screen::findOrFail($screenId);
+            
+            Seat::where('screen_id', $screenId)->delete();
+
+            $rowCount = $request->rows;
+            $seatsPerRow = $request->seats_per_row;
+            $rowStart = strtoupper($request->row_start);
+
+            $aisles = [];
+            for ($i = 0; $i < $request->aisle_count; $i++) {
+                if (isset($request->aisle_start[$i]) && isset($request->aisle_width[$i])) {
+                    $aisles[] = [
+                        'start' => (int)$request->aisle_start[$i],
+                        'width' => (int)$request->aisle_width[$i]
+                    ];
+                }
             }
 
-            if ($request->has('status')) {
-                $updates['status'] = $request->status;
+            usort($aisles, function ($a, $b) {
+                return $a['start'] - $b['start'];
+            });
+
+            for ($rowIndex = 0; $rowIndex < $rowCount; $rowIndex++) {
+                $currentRow = chr(ord($rowStart) + $rowIndex);
+
+                for ($position = 1; $position <= $seatsPerRow; $position++) {
+                    $isAisle = false;
+                    foreach ($aisles as $aisle) {
+                        if ($position >= $aisle['start'] && $position < ($aisle['start'] + $aisle['width'])) {
+                            $isAisle = true;
+                            break;
+                        }
+                    }
+
+                    $seatData = [
+                        'screen_id' => $screenId,
+                        'row' => $currentRow,
+                        'number' => $position,
+                        'type' => $isAisle ? 'aisle' : 'standard',
+                        'status' => $isAisle ? 'inactive' : 'active'
+                    ];
+
+                    Seat::create($seatData);
+                }
             }
 
-            $seat->update($updates);
+            DB::commit();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Seat updated successfully'
-            ]);
+            return redirect()
+                ->route('manager.theaters.screens.seats.index', [$theaterId, $screenId])
+                ->with('success', 'Seats updated successfully');
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to update seat'
-            ], 500);
+            DB::rollback();
+            \Log::error('Error updating seats:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return redirect()
+                ->back()
+                ->with('error', 'Failed to update seats: ' . $e->getMessage())
+                ->withInput();
         }
     }
 
@@ -207,5 +309,19 @@ class SeatController extends Controller
                 ->back()
                 ->with('error', 'Failed to delete seats. ' . $e->getMessage());
         }
+    }
+
+    public function updateSingle(Request $request, $theaterId, $screenId, $seatId)
+    {
+        $seat = \App\Models\Seat::where('screen_id', $screenId)->where('id', $seatId)->firstOrFail();
+        $data = $request->only(['type', 'status']);
+        $rules = [];
+        if ($request->has('type')) $rules['type'] = 'in:standard,vip,wheelchair,aisle';
+        if ($request->has('status')) $rules['status'] = 'in:active,maintenance,inactive';
+        $request->validate($rules);
+
+        $seat->update($data);
+
+        return response()->json(['success' => true, 'seat' => $seat]);
     }
 }

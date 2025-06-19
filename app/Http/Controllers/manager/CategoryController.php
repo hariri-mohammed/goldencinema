@@ -64,7 +64,7 @@ class CategoryController extends Controller
         return redirect()->route('categories.index')->with('success', 'The deletion process was completed successfully.');
     }
 
-    public function showMovies(Category $category)
+    public function movies(Category $category)
     {
         $movies = $category->movies()->with('status')->get(); // Assume Category has a movies relationship
         return view('manager.categories.movies', compact('category', 'movies'));

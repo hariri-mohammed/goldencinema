@@ -4,13 +4,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeMobileMenu = document.getElementById('closeMobileMenu');
     const mobileMenu = document.querySelector('.mobile-menu');
 
-    mobileMenuButton.addEventListener('click', function () {
-        mobileMenu.style.display = mobileMenu.style.display === 'block' ? 'none' : 'block';
-    });
+    if (mobileMenuButton) {
+        mobileMenuButton.addEventListener('click', function () {
+            mobileMenu.style.display = mobileMenu.style.display === 'block' ? 'none' : 'block';
+        });
+    }
 
-    closeMobileMenu.addEventListener('click', function () {
-        mobileMenu.style.display = 'none';
-    });
+    if (closeMobileMenu) {
+        closeMobileMenu.addEventListener('click', function () {
+            mobileMenu.style.display = 'none';
+        });
+    }
 
     // إدارة البحث
     const searchButton = document.getElementById('searchButton');
@@ -20,20 +24,23 @@ document.addEventListener('DOMContentLoaded', function () {
     const theatersButton = document.getElementById('theatersButton');
     const theatersBox = document.getElementById('theatersBox');
 
-    searchButton.addEventListener('click', function () {
-        searchBox.style.display = searchBox.style.display === 'block' ? 'none' : 'block';
-        theatersBox.style.display = 'none'; // إخفاء مربع المسارح عند فتح البحث
-    });
+    if (searchButton) {
+        searchButton.addEventListener('click', function () {
+            searchBox.style.display = searchBox.style.display === 'block' ? 'none' : 'block';
+            theatersBox.style.display = 'none'; // إخفاء مربع المسارح عند فتح البحث
+        });
+    }
 
-    theatersButton.addEventListener('click', function () {
-        theatersBox.style.display = theatersBox.style.display === 'block' ? 'none' : 'block';
-        searchBox.style.display = 'none'; // إخفاء شريط البحث عند فتح المسارح
-    });
+    if (theatersButton) {
+        theatersButton.addEventListener('click', function () {
+            theatersBox.style.display = theatersBox.style.display === 'block' ? 'none' : 'block';
+            searchBox.style.display = 'none'; // إخفاء شريط البحث عند فتح المسارح
+        });
+    }
 
     // إغلاق الصناديق بالنقر خارجها
     document.addEventListener('click', function (e) {
-        if (!searchButton.contains(e.target) && !searchBox.contains(e.target) &&
-            !theatersButton.contains(e.target) && !theatersBox.contains(e.target)) {
+        if (!searchButton && !searchBox && !theatersButton && !theatersBox) {
             searchBox.style.display = 'none';
             theatersBox.style.display = 'none';
         }
@@ -45,17 +52,23 @@ document.addEventListener('DOMContentLoaded', function () {
     const loginModalOverlay = document.querySelector('.login-modal-overlay');
     const closeLoginModal = document.querySelector('.close-login-modal');
 
-    loginButton.addEventListener('click', function () {
-        loginModalOverlay.classList.add('active');
-    });
+    if (loginButton) {
+        loginButton.addEventListener('click', function () {
+            loginModalOverlay.classList.add('active');
+        });
+    }
 
-    mobileLoginButton.addEventListener('click', function () {
-        loginModalOverlay.classList.add('active');
-    });
+    if (mobileLoginButton) {
+        mobileLoginButton.addEventListener('click', function () {
+            loginModalOverlay.classList.add('active');
+        });
+    }
 
-    closeLoginModal.addEventListener('click', function () {
-        loginModalOverlay.classList.remove('active');
-    });
+    if (closeLoginModal) {
+        closeLoginModal.addEventListener('click', function () {
+            loginModalOverlay.classList.remove('active');
+        });
+    }
 
     // إغلاق النافذة بالنقر خارجها
     document.addEventListener('click', function (e) {
@@ -67,18 +80,47 @@ document.addEventListener('DOMContentLoaded', function () {
     // إرسال النموذج
     const loginForm = document.getElementById('loginForm');
 
-    loginForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        loginForm.submit();
-    });
+    if (loginForm) {
+        loginForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            loginForm.submit();
+        });
+    }
 
     // تحديد الرابط المختار
     const links = document.querySelectorAll('.mobile-menu a');
 
-    links.forEach(link => {
-        link.addEventListener('click', function () {
-            links.forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
+    if (links) {
+        links.forEach(link => {
+            if (link) {
+                link.addEventListener('click', function () {
+                    links.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            }
         });
-    });
+    }
+
+    // إدارة زر الدفع (Pay Now Modal)
+    const payNowBtn = document.getElementById('payNowBtn');
+    const payConfirmModalEl = document.getElementById('payConfirmModal');
+    const modalPayConfirmBtn = document.getElementById('modalPayConfirmBtn');
+    const paymentForm = document.querySelector('form');
+
+    if (typeof bootstrap !== 'undefined' && payNowBtn && payConfirmModalEl && modalPayConfirmBtn && paymentForm) {
+        const payConfirmModal = new bootstrap.Modal(payConfirmModalEl);
+
+        payNowBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            payConfirmModal.show();
+        });
+
+        modalPayConfirmBtn.addEventListener('click', function () {
+            paymentForm.submit();
+        });
+    }
 });
+
+console.log(typeof bootstrap);
+console.log(document.getElementById('payNowBtn'));
+console.log(document.getElementById('payConfirmModal'));

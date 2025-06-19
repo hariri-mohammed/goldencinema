@@ -20,6 +20,7 @@ return new class extends Migration
             $table->timestamp('booking_date');
             $table->string('status')->default('pending'); // e.g., pending, confirmed, cancelled
             $table->string('payment_id')->nullable(); // For electronic payment transaction ID
+            $table->timestamp('reservation_expires_at')->nullable(); // When the temporary reservation expires
             $table->timestamps();
         });
     }

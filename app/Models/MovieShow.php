@@ -41,6 +41,11 @@ class MovieShow extends Model
         return $this->belongsTo(Screen::class);
     }
 
+    public function hall()
+    {
+        return $this->belongsTo(Hall::class);
+    }
+
     /**
      * Get the bookings for the movie show.
      */

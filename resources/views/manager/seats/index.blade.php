@@ -11,6 +11,9 @@
         <a href="{{ route('manager.theaters.screens.seats.create', [$screen->theater_id, $screen->id]) }}" class="btn btn-primary">
             <i class="fas fa-plus me-2"></i> Add New Seats
         </a>
+        <a href="{{ route('manager.theaters.screens.seats.edit', [$screen->theater_id, $screen->id]) }}" class="btn btn-info ms-2">
+            <i class="fas fa-edit me-2"></i> Edit Seating Layout
+        </a>
     </div>
 
     <!-- Alert Messages -->

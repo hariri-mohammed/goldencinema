@@ -10,7 +10,7 @@
                     <p class="mt-2 text-sm text-gray-600">Join Golden Cinema and start your movie journey</p>
                 </div>
 
-                <form action="{{ route('client_register') }}" method="post" class="space-y-6">
+                <form action="{{ route('client.register') }}" method="post" class="space-y-6">
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- First Name -->
@@ -134,7 +134,7 @@
                 <div class="mt-6 text-center">
                     <p class="text-sm text-gray-600">
                         Already have an account?
-                        <a href="{{ route('Client_login') }}" class="font-medium text-second-color hover:text-darker-color">
+                        <a href="{{ route('client.login') }}" class="font-medium text-second-color hover:text-darker-color">
                             Sign in here
                         </a>
                     </p>

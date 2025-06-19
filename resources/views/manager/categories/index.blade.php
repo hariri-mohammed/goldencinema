@@ -49,7 +49,7 @@
                                         <td class="align-middle">{{ $category->name }}</td>
                                         <td class="align-middle">
                                             <div class="btn-group" role="group">
-                                                <a href="{{ route('categories.movies.index', $category->id) }}"
+                                                <a href="{{ route('categories.movies', $category->id) }}"
                                                    class="btn btn-info btn-sm text-white me-1"
                                                    title="View Movies">
                                                     <i class="fas fa-film"></i>

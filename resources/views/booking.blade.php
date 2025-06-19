@@ -24,9 +24,9 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
-        <form action="{{ route('booking.store') }}" method="POST">
+        <form action="{{ route('client.bookings.store', ['movie_show' => $movieShow->id]) }}" method="POST">
             @csrf
-            <input type="hidden" name="movie_show_id" value="{{ $movieShow->id }}">
+            <input type="hidden" name="seats" id="selected-seats-input">
 
             <div class="seat-selection-area mb-4">
                 <h3 class="text-center mb-3">Select Your Seats</h3>
@@ -39,15 +39,25 @@
                         <div class="seat-row mb-2 d-flex justify-content-center align-items-center">
                             <span class="row-label me-2 fw-bold">{{ $row }}</span>
                             @foreach($seats as $seat)
+                                @php
+                                    $seatTypeClass = $seat->type; // standard, vip, wheelchair, aisle
+                                    $seatStatusClass = $seat->status; // active, maintenance, inactive
+                                    $isBookable = !$seat->isAisle() && $seat->status === 'active' && !in_array($seat->id, $bookedSeatIds);
+                                    $seatTooltip = 'Row: ' . $seat->row . ', Number: ' . $seat->number . ' | Type: ' . ucfirst($seat->type) . ' | Status: ' . ucfirst($seat->status);
+                                    if ($seat->type === 'vip') $seatTooltip .= ' (VIP)';
+                                    if (in_array($seat->id, $bookedSeatIds)) $seatTooltip .= ' (Booked)';
+                                @endphp
                                 @if($seat->isAisle())
                                     <div class="seat aisle" title="Aisle"></div>
                                 @else
                                     <div
-                                        class="seat {{ in_array($seat->id, $bookedSeatIds) ? 'booked' : '' }} {{ $seat->type }}"
+                                        class="seat {{ $seatTypeClass }} {{ $seatStatusClass }} {{ in_array($seat->id, $bookedSeatIds) ? 'booked' : '' }}"
                                         data-seat-id="{{ $seat->id }}"
                                         data-seat-price="{{ $movieShow->price }}"
                                         data-seat-type="{{ $seat->type }}"
-                                        title="Row: {{ $seat->row }}, Number: {{ $seat->number }} {{ $seat->type === 'vip' ? '(VIP)' : '' }} {{ in_array($seat->id, $bookedSeatIds) ? '(Booked)' : '' }}"
+                                        data-seat-status="{{ $seat->status }}"
+                                        title="{{ $seatTooltip }}"
+                                        @if(!$isBookable) style="pointer-events: none; opacity: 0.5;" @endif
                                     >
                                         {{ $seat->number }}
                                     </div>
@@ -58,10 +68,14 @@
                 </div>
 
                 <div class="seat-legend mt-4 d-flex justify-content-center gap-3">
-                    <div class="legend-item"><span class="seat available"></span> Available</div>
-                    <div class="legend-item"><span class="seat booked"></span> Booked</div>
+                    <div class="legend-item"><span class="seat standard"></span> Standard</div>
                     <div class="legend-item"><span class="seat vip"></span> VIP ({{ number_format($movieShow->price * 1.2, 2) }}$)</div>
+                    <div class="legend-item"><span class="seat wheelchair"></span> Wheelchair</div>
                     <div class="legend-item"><span class="seat aisle"></span> Aisle</div>
+                    <div class="legend-item"><span class="seat active"></span> Active</div>
+                    <div class="legend-item"><span class="seat maintenance"></span> Maintenance</div>
+                    <div class="legend-item"><span class="seat inactive"></span> Inactive</div>
+                    <div class="legend-item"><span class="seat booked"></span> Booked</div>
                 </div>
 
                 <div class="selected-seats-display mt-4 text-center">
@@ -69,7 +83,6 @@
                     <div id="selected-seats-list" class="d-flex flex-wrap justify-content-center gap-2">
                         <!-- Selected seats will be appended here -->
                     </div>
-                    <input type="hidden" name="selected_seats" id="selected-seats-input">
                 </div>
 
                 <div class="total-price-display text-center mt-4">
@@ -78,7 +91,7 @@
             </div>
 
             <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary btn-lg" id="confirm-booking-btn" disabled>Confirm Booking</button>
+                <button type="submit" id="confirm-booking-btn" class="btn btn-primary btn-lg w-100" style="max-width: 300px; margin: 0 auto; display: block;" onclick="return confirm('Are you sure you want to confirm your booking?')">Confirm Booking</button>
             </div>
         </form>
     </div>
@@ -122,39 +135,41 @@
         font-weight: bold;
         transition: background-color 0.2s, border-color 0.2s;
     }
-    .seat.available {
+    .seat.standard {
         background-color: #e9ecef;
-    }
-    .seat.available:hover {
-        background-color: #cfe2ff;
-        border-color: #0d6efd;
-    }
-    .seat.booked {
-        background-color: #dc3545;
-        color: white;
-        cursor: not-allowed;
-    }
-    .seat.booked:hover {
-        background-color: #dc3545; /* No change on hover for booked seats */
-        border-color: #dc3545;
-    }
-    .seat.selected {
-        background-color: #28a745;
-        color: white;
-        border-color: #28a745;
+        color: #343a40;
     }
     .seat.vip {
         background-color: #ffc107;
         color: #343a40;
     }
-    .seat.vip.selected {
+    .seat.wheelchair {
+        background-color: #00bcd4;
+        color: #fff;
+    }
+    .seat.active {
+        border: 2px solid #28a745;
+    }
+    .seat.maintenance {
+        background-color: #fd7e14;
+        color: #fff;
+        border: 2px dashed #fd7e14;
+    }
+    .seat.inactive {
+        background-color: #6c757d;
+        color: #fff;
+        border: 2px solid #6c757d;
+    }
+    .seat.booked {
+        background-color: #dc3545;
+        color: white;
+        cursor: not-allowed;
+        border: 2px solid #dc3545;
+    }
+    .seat.selected {
         background-color: #28a745;
         color: white;
         border-color: #28a745;
-    }
-    .seat.vip.booked {
-        background-color: #dc3545; /* VIP booked is same as regular booked */
-        color: white;
     }
     .seat.aisle {
         background-color: #6c757d;
@@ -200,14 +215,17 @@
         const selectedSeatsCount = document.getElementById('selected-seats-count');
         const selectedSeatsList = document.getElementById('selected-seats-list');
         const totalPriceDisplay = document.getElementById('total-price');
-        const confirmBookingBtn = document.getElementById('confirm-booking-btn');
-
-        let selectedSeats = new Map(); // Using Map to store seatId -> price
+        let selectedSeats = new Map();
 
         seatsContainer.addEventListener('click', function(event) {
             let seatElement = event.target.closest('.seat');
-
-            if (seatElement && !seatElement.classList.contains('booked') && !seatElement.classList.contains('aisle')) {
+            if (
+                seatElement &&
+                !seatElement.classList.contains('booked') &&
+                !seatElement.classList.contains('aisle') &&
+                !seatElement.classList.contains('maintenance') &&
+                !seatElement.classList.contains('inactive')
+            ) {
                 const seatId = seatElement.dataset.seatId;
                 const seatPrice = parseFloat(seatElement.dataset.seatPrice);
                 const seatType = seatElement.dataset.seatType;
@@ -216,11 +234,9 @@
                 const fullSeatName = `${row}${number}`;
 
                 if (seatElement.classList.contains('selected')) {
-                    // Deselect seat
                     seatElement.classList.remove('selected');
                     selectedSeats.delete(seatId);
                 } else {
-                    // Select seat
                     seatElement.classList.add('selected');
                     selectedSeats.set(seatId, { price: seatPrice, type: seatType, name: fullSeatName });
                 }
@@ -231,35 +247,21 @@
         function updateSelectedSeatsDisplay() {
             let currentTotal = 0;
             let currentSelectedIds = [];
-            let currentSelectedNames = [];
-
-            selectedSeatsList.innerHTML = ''; // Clear previous display
-
+            selectedSeatsList.innerHTML = '';
             selectedSeats.forEach((seat, id) => {
                 let price = seat.price;
-                if (seat.type === 'vip') {
-                    price *= 1.2; // Apply VIP markup
-                }
+                if (seat.type === 'vip') price *= 1.2;
                 currentTotal += price;
                 currentSelectedIds.push(id);
-                currentSelectedNames.push(seat.name + (seat.type === 'vip' ? ' (VIP)' : ''));
-
                 const seatTag = document.createElement('span');
                 seatTag.textContent = `${seat.name} (${number_format(price, 2)}$)`;
                 selectedSeatsList.appendChild(seatTag);
             });
-
             selectedSeatsCount.textContent = selectedSeats.size;
             totalPriceDisplay.textContent = number_format(currentTotal, 2);
-
-            // Update the hidden input field for form submission
             selectedSeatsInput.value = JSON.stringify(currentSelectedIds);
-
-            // Enable/disable the booking button
-            confirmBookingBtn.disabled = selectedSeats.size === 0;
         }
 
-        // Helper function for number formatting
         function number_format(number, decimals, dec_point, thousands_sep) {
             number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
             var n = !isFinite(+number) ? 0 : +number,
@@ -271,10 +273,9 @@
                     var k = Math.pow(10, prec);
                     return '' + Math.round(n * k) / k;
                 };
-
             s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
             if (s[0].length > 3) {
-                s[0] = s[0].replace(/\\B(?=(?:\\d{3})+(?!\\d))/g, sep);
+                s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
             }
             if ((s[1] || '').length < prec) {
                 s[1] = s[1] || '';

@@ -76,42 +76,45 @@
                     </h2>
                     @if (!empty($groupedShows))
                         <div class="showtimes-list">
-                            @foreach ($groupedShows as $date => $cities)
-                                <div class="showtime-date-group mb-5">
-                                    <h3 class="date-header mb-4">
-                                        <i class="far fa-calendar-alt me-2"></i>
-                                        {{ \Carbon\Carbon::parse($date)->format('l, d M Y') }}
-                                    </h3>
-                                    
-                                    @foreach ($cities as $city => $locations)
-                                        <div class="city-group mb-4">
-                                            <h4 class="city-header mb-3">
-                                                <i class="fas fa-city me-2"></i>
-                                                {{ $city }}
-                                            </h4>
-                                            
-                                            <div class="row">
-                                                @foreach ($locations as $location => $data)
-                                                    <div class="col-md-4 mb-4">
-                                                        <div class="showtime-group card h-100">
-                                                            <div class="card-body">
-                                                                <div class="theater-info mb-3">
-                                                                    <h5 class="card-title mb-2">
-                                                                        <i class="fas fa-map-marker-alt me-2"></i>
-                                                                        {{ $location }}
-                                                                    </h5>
-                                                                                                                               
+                            @foreach (array_chunk(array_keys($groupedShows), 3) as $dateChunk)
+                                <div class="row">
+                                    @foreach ($dateChunk as $date)
+                                        <div class="col-md-4">
+                                            <div class="showtime-date-group mb-5">
+                                                <h3 class="date-header mb-4">
+                                                    <i class="far fa-calendar-alt me-2"></i>
+                                                    {{ \Carbon\Carbon::parse($date)->format('l, d M Y') }}
+                                                </h3>
+                                                @foreach ($groupedShows[$date] as $city => $locations)
+                                                    <div class="city-group mb-4">
+                                                        <h4 class="city-header mb-3">
+                                                            <i class="fas fa-city me-2"></i>
+                                                            {{ $city }}
+                                                        </h4>
+                                                        <div class="row">
+                                                            @foreach ($locations as $location => $data)
+                                                                <div class="col-12 mb-4">
+                                                                    <div class="showtime-group card h-100">
+                                                                        <div class="card-body">
+                                                                            <div class="theater-info mb-3">
+                                                                                <h5 class="card-title mb-2">
+                                                                                    <i class="fas fa-map-marker-alt me-2"></i>
+                                                                                    {{ $location }}
+                                                                                </h5>
+                                                                            </div>
+                                                                            <div class="showtime-times d-flex flex-wrap gap-2">
+                                                                                @foreach ($data['times'] as $time)
+                                                                                    <a href="{{ route('booking.create', $time['id']) }}" 
+                                                                                       class="badge bg-success showtime-badge px-3 py-2 rounded-pill d-flex align-items-center justify-content-center text-decoration-none">
+                                                                                        <i class="far fa-clock me-1"></i>
+                                                                                        {{ $time['start'] }} - {{ $time['end'] }}
+                                                                                    </a>
+                                                                                @endforeach
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="showtime-times d-flex flex-wrap gap-2">
-                                                                    @foreach ($data['times'] as $time)
-                                                                        <a href="{{ route('booking.create', $time['id']) }}" 
-                                                                           class="badge bg-success showtime-badge px-3 py-2 rounded-pill d-flex align-items-center justify-content-center text-decoration-none">
-                                                                            <i class="far fa-clock me-1"></i>
-                                                                            {{ $time['start'] }} - {{ $time['end'] }}
-                                                                        </a>
-                                                                    @endforeach
-                                                                </div>
-                                                            </div>
+                                                            @endforeach
                                                         </div>
                                                     </div>
                                                 @endforeach

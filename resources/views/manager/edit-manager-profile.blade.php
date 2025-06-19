@@ -15,6 +15,14 @@
                 <h2 class="mt-2 fw-bold text-center">Edit {{ ucfirst($manager->username) }}'s Information</h2>
                 <span class="line"></span>
             </div>
+            @if(session('success'))
+                <div class="d-flex justify-content-center">
+                    <div class="alert alert-success alert-dismissible fade show text-center px-4 py-2" role="alert" style="display: inline-block; min-width: 200px; max-width: 100%; font-size: 1.1rem;">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            @endif
 
             <form id="edit-form" action="{{ route('manager.profile.update', $manager->id) }}" method="POST">
                 @csrf

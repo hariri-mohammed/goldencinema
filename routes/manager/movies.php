@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\manager\MovieController;
+use App\Http\Controllers\Manager\MovieController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Middleware\ManagerAuthenticate;

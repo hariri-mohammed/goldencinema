@@ -9,6 +9,12 @@
             <h2 class="mb-0">My Bookings</h2>
         </div>
         <div class="card-body">
+            @if(session('payment_success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('payment_success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
             @if($bookings->isEmpty())
                 <div class="text-center py-5">
                     <h3 class="text-muted">No bookings found</h3>
@@ -56,14 +62,8 @@
                                     <a href="{{ route('client.bookings.show', $booking) }}" class="btn btn-sm btn-info">
                                         View Details
                                     </a>
-                                    @if($booking->status === 'pending')
-                                    <form action="{{ route('client.bookings.cancel', $booking) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to cancel this booking?')">
-                                            Cancel
-                                        </button>
-                                    </form>
+                                    @if($booking->tickets->count())
+                                        <a href="{{ route('client.tickets.download', $booking->tickets->first()->id) }}" class="btn btn-sm btn-success mb-1">Download Ticket</a>
                                     @endif
                                 </td>
                             </tr>

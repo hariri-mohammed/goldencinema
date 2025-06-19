@@ -10,7 +10,7 @@
             </button>
         </div>
 
-        <form action="{{ route('client.register') }}" method="post" class="space-y-6">
+        <form action="{{ route('client.register.store') }}" method="post" class="space-y-6">
             @csrf
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- First Name -->

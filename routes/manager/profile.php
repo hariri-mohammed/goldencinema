@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\manager\ManagerProfileController;
+use App\Http\Controllers\Manager\ManagerProfileController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Middleware\ManagerAuthenticate;

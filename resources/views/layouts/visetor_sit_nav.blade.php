@@ -109,14 +109,14 @@
                             </svg>
                             <span class="font-semibold">Login</span>
                         </button>
-                        <a href="{{ route('client.register') }}"
+                        <button onclick="showRegisterModal()"
                             class="flex items-center space-x-2 bg-transparent text-second-color hover:text-darker-color">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                             </svg>
                             <span class="font-semibold">Register</span>
-                        </a>
+                        </button>
                     </div>
                 @endauth
             </div>
@@ -165,14 +165,14 @@
                             </svg>
                             <span class="font-bold text-gray-800">Hi User</span>
                         </div>
-                        <button id="mobileLoginButton"
+                        <button onclick="showLoginModal()"
                             class="w-full text-left p-2 text-gray-600 hover:bg-gray-100 rounded">
                             {{ __('Log In') }}
                         </button>
-                        <a href="{{ route('client.register') }}"
+                        <button onclick="showRegisterModal()"
                             class="w-full text-left p-2 text-gray-600 hover:bg-gray-100 rounded">
                             {{ __('Register') }}
-                        </a>
+                        </button>
                     </div>
                 @endauth
             </div>
@@ -213,33 +213,36 @@
             </button>
         </div>
 
-        <form method="POST" action="{{ route('client.login') }}" class="space-y-6">
+        <!-- Error Message -->
+        @if ($errors->has('email') || $errors->has('password'))
+            <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md text-center">
+                <span>Incorrect email or password. Please try again.</span>
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('client.login.store') }}" class="space-y-6" id="loginForm">
             @csrf
             <div>
                 <label for="login_email" class="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" name="email" id="login_email" required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-second-color focus:ring-second-color">
+                <input type="email" name="email" id="login_email" required autocomplete="username"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-second-color focus:ring-2 focus:ring-second-color focus:outline-none py-2 px-3">
             </div>
 
             <div>
                 <label for="login_password" class="block text-sm font-medium text-gray-700">Password</label>
-                <input type="password" name="password" id="login_password" required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-second-color focus:ring-second-color">
-            </div>
-
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <input type="checkbox" name="remember" id="remember"
-                        class="h-4 w-4 rounded border-gray-300 text-second-color focus:ring-second-color">
-                    <label for="remember" class="ml-2 block text-sm text-gray-700">Remember me</label>
-                </div>
+                <input type="password" name="password" id="login_password" required autocomplete="current-password"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-second-color focus:ring-2 focus:ring-second-color focus:outline-none py-2 px-3">
             </div>
 
             <button type="submit"
-                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-second-color hover:bg-darker-color focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-second-color">
+                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-second-color hover:bg-darker-color focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-second-color transition-colors duration-200">
                 Sign in
             </button>
         </form>
+        <div class="mt-4 text-center text-sm text-gray-700">
+            <span>Don't have an account?</span>
+            <a href="#" onclick="switchToRegister(); return false;" class="text-second-color hover:underline font-semibold">Create one here</a>
+        </div>
     </div>
 </div>
 
@@ -254,12 +257,24 @@ function closeLoginModal() {
     document.body.style.overflow = 'auto';
 }
 
+function switchToRegister() {
+    closeLoginModal();
+    showRegisterModal();
+}
+
 // Close modal when clicking outside
 document.getElementById('loginModal').addEventListener('click', function(e) {
     if (e.target === this) {
         closeLoginModal();
     }
 });
+
+// إبقاء المودال مفتوح إذا كان هناك أخطاء في تسجيل الدخول
+@if ($errors->has('email') || $errors->has('password'))
+    document.addEventListener('DOMContentLoaded', function() {
+        showLoginModal();
+    });
+@endif
 
 // Handle booking links
 document.addEventListener('DOMContentLoaded', function() {
@@ -280,13 +295,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else if (response.status === 401) {
                     showLoginModal();
                 } else {
-                    // For other errors (e.g., 500), try to get a specific message.
-                    // If response is not JSON or parsing fails, provide a generic message.
-                    response.json().then(errorData => {
-                        alert(errorData.message || `An error occurred (Status: ${response.status}). Please try again.`);
-                    }).catch(() => {
-                        alert(`An unexpected error occurred (Status: ${response.status}). Please try again.`);
-                    });
+                    // If response is not OK, and not a 401, check if it's JSON or not.
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && contentType.includes('application/json')) {
+                        response.json().then(errorData => {
+                            alert(errorData.message || `An error occurred (Status: ${response.status}). Please try again.`);
+                        }).catch(() => {
+                            alert(`An unexpected error occurred (Status: ${response.status}). Please try again.`);
+                        });
+                    } else {
+                        // If it's not JSON, alert a generic error or simply reload.
+                        alert(`An unexpected server error occurred (Status: ${response.status}). Please try again.`);
+                        // Optionally, you might want to reload the page for unhandled errors:
+                        // window.location.reload();
+                    }
                 }
             })
             .catch(error => {
@@ -295,58 +317,10 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
-
-    // Handle login form submission
-    const loginForm = document.querySelector('#loginModal form');
-    if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => {
-                // Always attempt to parse JSON, even for non-OK responses, to get error details.
-                return response.json().then(data => ({
-                    ok: response.ok,
-                    status: response.status,
-                    data: data
-                })).catch(e => {
-                    // If JSON parsing fails (e.g., server returned HTML for an error),
-                    // create a generic error object.
-                    console.error('JSON parsing failed for login response:', e);
-                    return {
-                        ok: response.ok,
-                        status: response.status,
-                        data: { message: `Server error (Status: ${response.status}). Could not parse error details.` }
-                    };
-                });
-            })
-            .then(({ ok, status, data }) => {
-                if (ok && data.success) {
-                    window.location.reload();
-                } else {
-                    // If response is not OK, or success is false, display server's message or a fallback.
-                    alert(data.message || `Login failed (Status: ${status}). Please check your credentials or try again.`);
-                }
-            })
-            .catch(error => {
-                // This catch block handles network errors or errors thrown during JSON parsing.
-                console.error('Login Fetch Error:', error);
-                alert(error.message || 'An unexpected network error occurred. Please try again.');
-            });
-        });
-    }
 });
 </script>
 
-@include('movies.profile_modal')
+@include('client.profile_modal')
 
 </body>
 
