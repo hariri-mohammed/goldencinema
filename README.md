@@ -9,7 +9,7 @@ GoldenCinema is a comprehensive, full-featured web application designed to manag
 📸 Screenshots Gallery
 
 <p align="center">
-  <img src="screenshots/Homepage .jpg" width="30%">
+  <img src="screenshots/Homepage .jpg">
   <img src="screenshots/Movie Details.jpg" width="30%">
   <img src="screenshots/Seat Selection.jpg" width="30%">
 </p>
