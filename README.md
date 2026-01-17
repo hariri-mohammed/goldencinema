@@ -4,6 +4,21 @@
 
 ### Overview
 GoldenCinema is a comprehensive, full-featured web application designed to manage cinema operations, schedule movie screenings, and provide a seamless online ticket booking experience. The system implements role-based access control with three distinct user roles: **Admins**, **Managers**, and **Clients**, ensuring secure and efficient operations across all levels of the cinema business.
+## 
+
+📸 Screenshots Gallery
+
+<p align="center">
+  <img src="screenshots/Homepage.jpg" width="30%">
+  <img src="screenshots/Movie Details.jpg" width="30%">
+  <img src="screenshots/Seat Selection.jpg" width="30%">
+</p>
+
+<p align="center">
+  <img src="screenshots/Booking Confirmation.jpg" width="30%">
+  <img src="screenshots/User Profile.jpg" width="30%">
+  <img src="screenshots/Movie Management.jpg" width="30%">
+</p>
 
 ### Core Features
 
