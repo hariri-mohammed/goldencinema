@@ -282,6 +282,7 @@ php artisan config:clear
 php artisan view:clear
 ```
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 📸 Screenshot Titles Based on Your Routes
 🔐 1. Manager Login Page
@@ -312,6 +313,8 @@ http://127.0.0.1:8000/movie-shows/8/book
 http://127.0.0.1:8000/manager/profile/2
 
 >>>>>>> 47b5209f466495089952aa0bb7ad5b3d90df9022
+=======
+>>>>>>> 3ffdc3be5098ba31f3c1b182b2cf792d7f996775
 
 ### Conclusion
 GoldenCinema delivers a production-ready cinema management solution with secure authentication, comprehensive cinema operations management, and an intuitive online booking platform. It demonstrates professional Laravel development practices with clean code, proper architectural patterns, and user-friendly interfaces for all stakeholders in the cinema business.
@@ -643,6 +646,7 @@ php artisan config:clear
 php artisan view:clear
 ```
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 📸 Screenshot Titles Based on Your Routes
 🔐 1. Manager Login Page
@@ -672,6 +676,8 @@ http://127.0.0.1:8000/movie-shows/8/book
 👤 9. User Profile Page
 http://127.0.0.1:8000/manager/profile/2
 
+=======
+>>>>>>> 3ffdc3be5098ba31f3c1b182b2cf792d7f996775
 
 >>>>>>> 47b5209f466495089952aa0bb7ad5b3d90df9022
 
