@@ -52,8 +52,8 @@
                             <tr>
                                 <td class="align-middle">
                                     <div class="d-flex align-items-center">
-                                        @if($movie->img)
-                                            <img src="data:image/jpeg;base64,{{ base64_encode($movie->img) }}"
+                                        @if($movie->image)
+                                            <img src="{{ asset('img/movie/' . $movie->image) }}"
                                                  alt="{{ $movie->name }}"
                                                  class="rounded me-2"
                                                  style="width: 40px; height: 60px; object-fit: cover;">
@@ -70,7 +70,11 @@
                                 <td class="align-middle">{{ $movie->country }}</td>
                                 <td class="align-middle">{{ \Carbon\Carbon::parse($movie->release_date)->format('M d, Y') }}</td>
                                 <td class="align-middle">{{ $movie->runtime }} min</td>
-                                <td class="align-middle">{{ $movie->rating }}</td>
+                                <td class="align-middle">
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="fas fa-star"></i> {{ $movie->rating }}
+                                    </span>
+                                </td>
                                 <td class="align-middle">
                                     <div class="btn-group" role="group">
                                         <a href="{{ route('movie.show', $movie->id) }}"

@@ -10,12 +10,31 @@
     <link rel="stylesheet" href="{{ asset('css/Manger_login.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
-    <title>Admin_Login</title>
+    <title>Admin Login</title>
+    <style>
+        /* Admin-specific styling */
+        .admin-theme .switch-link {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: 2px solid #fff;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .admin-theme .switch-link:hover {
+            background: #fff;
+            color: #dc3545;
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
 
 <body style="font-family: 'Times New Roman', Times, serif">
 
-    <div class="main-box flex-column flex-lg-row">
+    <div class="main-box flex-column flex-lg-row admin-theme">
         <div class="img-box d-none d-lg-block">
             <img src="{{ asset('img/login_cofer.avif') }}" alt="">
         </div>
@@ -26,8 +45,8 @@
                 <div class="logo text-center mt-4">
                     <img src="{{ asset('img/Logo.PNG') }}" alt="">
                 </div>
-                <h1 class="text-white text-center">Welcome Back</h1>
-                <h5 class="text-white-50 text-center">Enter your Details</h5>
+                <h1 class="text-white text-center">Admin Login</h1>
+                <h5 class="text-white-50 text-center">Enter your Admin Credentials</h5>
                 <div class="input-box">
                     <div class="form-group">
                         <input class="email form-control" type="email" name="email" placeholder="Enter Your Email"
@@ -58,6 +77,12 @@
 
                 <div class="btn-box text-center">
                     <input id="btn" type="submit" value="Log In" />
+                </div>
+
+                <div class="text-center">
+                    <a href="{{ route('manager.login') }}" class="switch-link">
+                        <i class="fa fa-exchange"></i> Switch to Manager Login
+                    </a>
                 </div>
 
                 <script>

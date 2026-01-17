@@ -21,42 +21,44 @@ class MovieController extends Controller
     public function create()
     {
         $categories = Category::all(); // الحصول على جميع الفئات
-        return view('manager.movie.create', compact('categories'));
+        $statuses = Status::all(); //  الحصول على جميع الحالات
+        return view('manager.movie.create', compact('categories', 'statuses'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255|unique:movies,name',
             'language' => 'required|string|max:255',
             'country' => 'required|string|max:255',
             'release_date' => 'required|date',
             'runtime' => 'required|integer|min:0',
-            'rating' => 'required|numeric|min:0|max:10',
-            'img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:6144',
+            'rating' => 'required|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:6144',
             'stars' => 'required|string',
             'categories' => 'required|array',
             'summary' => 'required|string',
+            'status_id' => 'required|exists:statuses,id',
         ]);
 
-        // التحقق من وجود الفيلم مسبقاً
-        $existingMovie = Movie::where('name', $request->input('name'))->first();
-        if ($existingMovie) {
-            return redirect()->back()->withErrors(['name' => 'Movie Name is Duplicate. Please Change It!'])->withInput();
-        }
+        // Prepare the data for the 'movies' table by removing non-column data.
+        $movieData = collect($validatedData)->except(['categories', 'image'])->toArray();
 
-        if ($request->hasFile('img')) {
-            $image = $request->file('img');
-            $validatedData['img'] = file_get_contents($image->getRealPath());
-        }
+        // Handle the image upload. We don't need an 'if' because the validator guarantees the file exists.
+        $imageFile = $request->file('image');
+        $imageName = time() . '.' . $imageFile->getClientOriginalExtension();
+        $imageFile->move(public_path('img/movie'), $imageName);
+        
+        // Add the generated image name to the data array.
+        $movieData['image'] = $imageName;
 
-        $movie = Movie::create($request->except('img') + ['img' => $validatedData['img'] ?? null]);
+        // Create the movie with the final, clean data.
+        $movie = Movie::create($movieData);
 
-        // حفظ الفئات المرتبطة بالفيلم
-        $categories = $request->input('categories');
-        $movie->categories()->attach($categories);
+        // Attach the categories separately.
+        $movie->categories()->attach($validatedData['categories']);
 
-        return redirect()->back()->with('success', 'The Movie creation process was completed successfully.');
+        return redirect()->route('movie.index')->with('success', 'Movie created successfully.');
     }
 
     public function show(Movie $movie)
@@ -67,42 +69,51 @@ class MovieController extends Controller
     public function edit(Movie $movie)
     {
         $categories = Category::all(); // الحصول على جميع الفئات
-        return view('manager.movie.edit', compact('movie', 'categories'));
+        $statuses = Status::all();   // الحصول على جميع الحالات
+        return view('manager.movie.edit', compact('movie', 'categories', 'statuses'));
     }
 
     public function update(Request $request, Movie $movie)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255|unique:movies,name,'.$movie->id,
             'language' => 'required|string|max:255',
             'country' => 'required|string|max:255',
             'release_date' => 'required|date',
             'runtime' => 'required|integer|min:0',
-            'rating' => 'required|numeric|min:0|max:10',
-            'img' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:6144',
+            'rating' => 'required|string',
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:6144',
             'stars' => 'required|string',
             'categories' => 'required|array',
             'summary' => 'required|string',
+            'status_id' => 'required|exists:statuses,id',
         ]);
 
-        // التحقق من وجود الفيلم المعدل مسبقاً
-        $existingMovie = Movie::where('name', $request->input('name'))->first();
-        if ($existingMovie && $existingMovie->id != $movie->id) {
-            return redirect()->back()->withErrors(['name' => 'Movie Name is Duplicate. Please Change It!'])->withInput();
+        // Prepare the data for the 'movies' table by removing non-column data.
+        $movieData = collect($validatedData)->except(['categories', 'image'])->toArray();
+
+        // Handle optional image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if it exists
+            if ($movie->image && file_exists(public_path('img/movie/' . $movie->image))) {
+                unlink(public_path('img/movie/' . $movie->image));
+            }
+
+            $imageFile = $request->file('image');
+            $imageName = time() . '.' . $imageFile->getClientOriginalExtension();
+            $imageFile->move(public_path('img/movie'), $imageName);
+            
+            // Add the new image name to the data array for updating.
+            $movieData['image'] = $imageName;
         }
 
-        if ($request->hasFile('img')) {
-            $image = $request->file('img');
-            $validatedData['img'] = file_get_contents($image->getRealPath());
-        }
+        // Update the movie with the clean data.
+        $movie->update($movieData);
 
-        $movie->update($request->except('img') + ['img' => $validatedData['img'] ?? $movie->img]);
+        // Sync the categories separately.
+        $movie->categories()->sync($validatedData['categories']);
 
-        // تحديث الفئات المرتبطة بالفيلم
-        $categories = $request->input('categories');
-        $movie->categories()->sync($categories);
-
-        return redirect()->back()->with('success', 'The Movie update process was completed successfully.');
+        return redirect()->route('movie.index')->with('success', 'Movie updated successfully.');
     }
 
     public function destroy(Movie $movie)

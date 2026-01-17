@@ -10,16 +10,14 @@ return new class extends Migration
     {
         Schema::create('seats', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('screen_id')->constrained()->onDelete('cascade');
-            $table->string('row'); // مثل A, B, C
-            $table->integer('number'); // رقم المقعد في الصف
-            $table->enum('type', ['standard', 'vip', 'wheelchair', 'aisle'])->default('standard');
+            $table->foreignId('screen_id')->constrained('screens')->onDelete('cascade');
+            $table->string('row'); // e.g., A, B, C
+            $table->integer('number'); // Seat number within the row
+            $table->string('type')->default('Standard'); // e.g., Standard, VIP, Wheelchair, Aisle
             $table->enum('status', ['active', 'maintenance', 'inactive'])->default('active');
-            $table->boolean('is_aisle_left')->default(false);  // هل يوجد ممر على اليسار
-            $table->boolean('is_aisle_right')->default(false); // هل يوجد ممر على اليمين
             $table->timestamps();
 
-            // لضمان عدم تكرار نفس المقعد في نفس الشاشة
+            // Unique constraint for a seat in a screen
             $table->unique(['screen_id', 'row', 'number']);
         });
     }

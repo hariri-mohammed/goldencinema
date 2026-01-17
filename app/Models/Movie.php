@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Movie extends Model
 {
@@ -16,21 +17,24 @@ class Movie extends Model
         'release_date',
         'runtime',
         'rating',
-        'img',
+        'image',
         'stars',
         'summary',
+        'status_id',
     ];
 
 
     // العلاقات الأخرى...
 
 
-    protected $attributes = [
-        'status_id' => 2, // Set default to 2
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'release_date' => 'date',
     ];
-
-    // إضافة الحقل release_date إلى المصفوفة dates
-    protected $dates = ['release_date'];
 
     public function status()
     {
@@ -39,7 +43,7 @@ class Movie extends Model
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'movie_category', 'movie_id', 'category_id');
+        return $this->belongsToMany(Category::class, 'movie_category');
     }
 
     public function movieShows()
@@ -62,5 +66,25 @@ class Movie extends Model
     public function trailer()
     {
         return $this->hasOne(Trailer::class);
+    }
+
+    /**
+     * Get the movie's runtime formatted as 'Xh Ym'.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function formattedRuntime(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value, $attributes) {
+                if (empty($attributes['runtime'])) {
+                    return 'N/A';
+                }
+                $minutes = $attributes['runtime'];
+                $hours = floor($minutes / 60);
+                $remainingMinutes = $minutes % 60;
+                return "{$hours}h {$remainingMinutes}m";
+            },
+        );
     }
 }

@@ -24,8 +24,8 @@
                     <!-- Movie Information -->
                     <div class="col-md-4">
                         <div class="card h-100">
-                            @if ($show->movie->img)
-                                <img src="data:image/jpeg;base64,{{ base64_encode($show->movie->img) }}"
+                            @if ($show->movie->image)
+                                <img src="{{ asset('img/movie/' . $show->movie->image) }}"
                                     class="card-img-top mx-auto d-block" alt="{{ $show->movie->name }}"
                                     style="margin-top: 15px; width: 120px; height: 180px; object-fit: cover;">
                             @else

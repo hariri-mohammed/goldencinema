@@ -1,0 +1,45 @@
+1. View reports: index
+2. Open manager list: index
+3. Click on show (from list): create
+4. Edit profile: edit, update
+5. Open categories: index
+6. Click on a Showtime: index
+7. Pay booking: create, store, showPaymentForm
+8. Enter keyword + submit: index
+9. Click theatre map: show, find
+10. Click on movie: index
+11. My bookings: index
+12. Submit screen form: create, store
+13. Open Home Page (/cinema): index
+14. Submit form (Trailer): create, store
+15. Submit seat creation form: create, store
+16. Select seat + status: updateSingle
+17. Open screen list: index
+18. Choose seat + type: updateSingle
+19. Open theatre list: index
+20. Click delete screen: destroy
+21. Open seat list: index
+22. Open signup page: showRegistrationForm
+23. Click "Coming Soon": index
+24. Click movie card: show
+25. Click theatre map (Visitor): show
+26. Submit theatre form: create, store
+27. Enter keyword (Visitor): index
+28. Click category dropdown: index
+29. Click delete theatre: destroy
+30. Open home (/cinema): index
+31. Click movie card (showtimes): index
+32. Click on movie card (details/trailer): show, index
+33. Visit My Bookings (/bookings): index
+34. Click "Download Ticket": downloadTicket
+35. Open Trailers List: index
+36. Click "Now Showing": index
+37. Home scroll to categories: index
+38. Click delete trailer: destroy
+39. Edit seat info: edit, update
+40. Submit edit form (theatre): edit, update
+41. Submit update (trailer): edit, update
+42. Select category: index
+43. Open screen list (manager): index
+44. Open seat list (manager): index
+45. Open trailer list (manager): index 

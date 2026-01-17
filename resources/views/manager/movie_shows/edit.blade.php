@@ -48,8 +48,8 @@
                         </label>
                         <select name="movie_id" id="movie_id" class="form-select border-gray-300 focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 rounded-md shadow-sm" required>
                             <option value="">Select a Movie</option>
-                            @foreach($movies as $movie)
-                                <option value="{{ $movie->id }}" {{ (old('movie_id', $show->movie_id) == $movie->id) ? 'selected' : '' }}>
+                            @foreach ($movies as $movie)
+                                <option value="{{ $movie->id }}" {{ $show->movie_id == $movie->id ? 'selected' : '' }}>
                                     {{ $movie->name }}
                                 </option>
                             @endforeach

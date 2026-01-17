@@ -4,7 +4,7 @@
     <div class="container movie-details">
         <div class="row">
             <div class="col-md-4 movie-image">
-                <img src="data:image/jpeg;base64,{{ base64_encode($movie->img) }}" alt="{{ $movie->name }}" class="img-fluid">
+                <img src="{{ asset('img/movie/' . $movie->image) }}" alt="{{ $movie->name }}" class="img-fluid">
             </div>
             <div class="col-md-8 movie-info">
                 <h1 class="movie-title">{{ $movie->name }}</h1>
@@ -20,8 +20,10 @@
                         {{ \Carbon\Carbon::parse($movie->release_date)->format('d M Y') }}
                     </span>
                     <span class="badge bg-secondary">
-                        <i class="far fa-clock"></i> {{ $runtimeFormatted }}
-
+                        <i class="far fa-clock"></i> {{ $movie->formatted_runtime }}
+                    </span>
+                    <span class="badge bg-warning text-dark">
+                        <i class="fas fa-star"></i> {{ $movie->rating }}
                     </span>
                 </div>
                 <p class="movie-summary">{{ $movie->summary }}</p>
@@ -74,50 +76,41 @@
                     <h2 class="highlight">
                         Showtimes
                     </h2>
-                    @if (!empty($groupedShows))
-                        <div class="showtimes-list">
-                            @foreach (array_chunk(array_keys($groupedShows), 3) as $dateChunk)
-                                <div class="row">
+                    @if ($groupedShows->isNotEmpty())
+                        <div class="showtimes-list mt-4">
+                            {{-- Create a new row for each chunk of 3 dates --}}
+                            @foreach ($groupedShows->keys()->chunk(3) as $dateChunk)
+                                <div class="row mb-4">
+                                    {{-- Create a column for each date in the chunk --}}
                                     @foreach ($dateChunk as $date)
                                         <div class="col-md-4">
-                                            <div class="showtime-date-group mb-5">
-                                                <h3 class="date-header mb-4">
+                                            <div class="showtime-date-group h-100">
+                                                <h3 class="date-header mb-3">
                                                     <i class="far fa-calendar-alt me-2"></i>
                                                     {{ \Carbon\Carbon::parse($date)->format('l, d M Y') }}
                                                 </h3>
-                                                @foreach ($groupedShows[$date] as $city => $locations)
-                                                    <div class="city-group mb-4">
-                                                        <h4 class="city-header mb-3">
-                                                            <i class="fas fa-city me-2"></i>
-                                                            {{ $city }}
-                                                        </h4>
-                                                        <div class="row">
-                                                            @foreach ($locations as $location => $data)
-                                                                <div class="col-12 mb-4">
-                                                                    <div class="showtime-group card h-100">
-                                                                        <div class="card-body">
-                                                                            <div class="theater-info mb-3">
-                                                                                <h5 class="card-title mb-2">
-                                                                                    <i class="fas fa-map-marker-alt me-2"></i>
-                                                                                    {{ $location }}
-                                                                                </h5>
-                                                                            </div>
-                                                                            <div class="showtime-times d-flex flex-wrap gap-2">
-                                                                                @foreach ($data['times'] as $time)
-                                                                                    <a href="{{ route('booking.create', $time['id']) }}" 
-                                                                                       class="badge bg-success showtime-badge px-3 py-2 rounded-pill d-flex align-items-center justify-content-center text-decoration-none">
-                                                                                        <i class="far fa-clock me-1"></i>
-                                                                                        {{ $time['start'] }} - {{ $time['end'] }}
-                                                                                    </a>
-                                                                                @endforeach
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                                
+                                                @if(isset($groupedShows[$date]))
+                                                    @foreach ($groupedShows[$date] as $location => $data)
+                                                        <div class="showtime-group card mb-3">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title mb-2">
+                                                                    <i class="fas fa-map-marker-alt me-2"></i>
+                                                                    {{ $location }} ({{ $data['theater']->city }})
+                                                                </h5>
+                                                                <div class="showtime-times d-flex flex-wrap gap-2">
+                                                                    @foreach ($data['times'] as $time)
+                                                                        <a href="{{ route('booking.create', $time['id']) }}" 
+                                                                           class="badge bg-success showtime-badge px-3 py-2 rounded-pill d-flex align-items-center justify-content-center text-decoration-none">
+                                                                            <i class="far fa-clock me-1"></i>
+                                                                            {{ $time['start'] }}
+                                                                        </a>
+                                                                    @endforeach
                                                                 </div>
-                                                            @endforeach
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                @endforeach
+                                                    @endforeach
+                                                @endif
                                             </div>
                                         </div>
                                     @endforeach
@@ -125,7 +118,10 @@
                             @endforeach
                         </div>
                     @else
-                        <p>No showtimes are currently available.</p>
+                        <div class="text-center text-gray-500 mt-4">
+                            <i class="fas fa-film fa-3x mb-3"></i>
+                            <p>No showtimes are currently available.</p>
+                        </div>
                     @endif
                 </div>
             </div>
@@ -139,8 +135,8 @@
                         @foreach ($relatedMovies as $relatedMovie)
                             <div class="movie-card">
                                 <a href="{{ route('movies.show', $relatedMovie->id) }}">
-                                    @if ($relatedMovie->img)
-                                        <img src="data:image/jpeg;base64,{{ base64_encode($relatedMovie->img) }}"
+                                    @if ($relatedMovie->image)
+                                        <img src="{{ asset('img/movie/' . $relatedMovie->image) }}"
                                             alt="{{ $relatedMovie->name }}" class="img-fluid">
                                     @else
                                         <img src="{{ asset('images/placeholder.jpg') }}" alt="No Image" class="img-fluid">

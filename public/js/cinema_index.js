@@ -10,19 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeStatus = 'all';
     let selectedCategories = [];
 
-    // 3. دالة لإنشاء رسالة "لا توجد نتائج"
-    // const createNoResultsMessage = () => {
-    //     const messageDiv = document.createElement('div');
-    //     messageDiv.className = 'col-12 text-center py-5 no-results-message'; // أضفنا 'no-results-message' هنا
-    //     messageDiv.innerHTML = '<h4 class="text-muted">No Movies Yet.</h4>';
-    //     return messageDiv;
-    // };
-
     const filterMovies = () => {
         if (!moviesGrid) return;
 
         const movies = moviesGrid.querySelectorAll('.movie-item');
-        let visibleCount = 0;
 
         // إخفاء جميع الأفلام أولاً
         movies.forEach(movie => {
@@ -39,25 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (statusMatch && categoryMatch) {
                 movie.style.display = 'flex';
-                visibleCount++;
             }
         });
-
-        // إزالة أي رسالة سابقة
-        const existingMessage = moviesGrid.querySelector('.no-results-message');
-        if (existingMessage) {
-            existingMessage.remove();
-        }
-
-        // عرض رسالة "لا توجد نتائج" إذا لم تكن هناك أفلام مرئية
-        // if (visibleCount === 0) {
-        //     const noResultsMessage = createNoResultsMessage();
-        //     noResultsMessage.classList.add('no-results-message');
-        //     moviesGrid.appendChild(noResultsMessage);
-        // }
     };
 
-    // 5. حدث النقر على أزرار الفلترة
+    // 3. حدث النقر على أزرار الفلترة
     if (filterButtons) {
         filterButtons.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -69,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 6. حدث اختيار الفئة
+    // 4. حدث اختيار الفئة
     if (categorySelect && categoryOptions && selectedCategoryText) {
         categorySelect.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -107,6 +84,119 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 7. تطبيق الفلترة عند تحميل الصفحة
+    // 5. تطبيق الفلترة عند تحميل الصفحة
     filterMovies();
+
+    // ===== SWIPER CAROUSEL =====
+
+    // التحقق من وجود Swiper في الصفحة
+    if (typeof Swiper !== 'undefined') {
+        initializeSwiper();
+    } else {
+        // تحميل Swiper.js ديناميكياً إذا لم يكن موجوداً
+        loadSwiperAndInitialize();
+    }
+
+    function loadSwiperAndInitialize() {
+        // إضافة CSS
+        const swiperCSS = document.createElement('link');
+        swiperCSS.rel = 'stylesheet';
+        swiperCSS.href = 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css';
+        document.head.appendChild(swiperCSS);
+
+        // إضافة JavaScript
+        const swiperJS = document.createElement('script');
+        swiperJS.src = 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js';
+        swiperJS.onload = initializeSwiper;
+        document.head.appendChild(swiperJS);
+    }
+
+    function initializeSwiper() {
+        // تهيئة Swiper مباشرة
+        const swiper = new Swiper('.movie-swiper', {
+            // عدد الأفلام المعروضة
+            slidesPerView: 4,
+
+            // المسافة بين الأفلام
+            spaceBetween: 15,
+
+            // عدد الأفلام التي تتحرك في كل مرة (2 من اليمين، 2 من اليسار)
+            slidesPerGroup: 2,
+
+            // حلقة لا نهائية
+            loop: true,
+
+            // التمرير التلقائي
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+            },
+
+            // أزرار التنقل
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+
+            // نقاط التنقل
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+                dynamicBullets: true,
+            },
+
+            // تأثيرات الانتقال
+            effect: 'slide',
+            speed: 600,
+
+            // التجاوب مع أحجام الشاشات المختلفة
+            breakpoints: {
+                // الشاشات الصغيرة جداً
+                320: {
+                    slidesPerView: 1,
+                    slidesPerGroup: 1,
+                    spaceBetween: 10,
+                },
+                // الشاشات الصغيرة
+                576: {
+                    slidesPerView: 2,
+                    slidesPerGroup: 1,
+                    spaceBetween: 12,
+                },
+                // الشاشات المتوسطة
+                768: {
+                    slidesPerView: 3,
+                    slidesPerGroup: 2,
+                    spaceBetween: 15,
+                },
+                // الشاشات الكبيرة
+                1024: {
+                    slidesPerView: 4,
+                    slidesPerGroup: 2,
+                    spaceBetween: 15,
+                },
+                // الشاشات الكبيرة جداً
+                1200: {
+                    slidesPerView: 4,
+                    slidesPerGroup: 2,
+                    spaceBetween: 20,
+                }
+            },
+
+            // إعدادات إضافية
+            grabCursor: true,
+            keyboard: {
+                enabled: true,
+                onlyInViewport: true,
+            },
+
+            // تحسين الأداء
+            preloadImages: false,
+            lazy: {
+                loadPrevNext: true,
+                loadPrevNextAmount: 2,
+            }
+        });
+    }
 });

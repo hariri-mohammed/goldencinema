@@ -28,7 +28,7 @@ class MovieShowController extends Controller
         }
 
         $shows = $query->latest()->paginate(10);
-        $movies = Movie::where('status_id', 2)->get(); // Only active movies
+        $movies = movie::all();
         $theaters = Theater::all();
         $screens = collect();
 
@@ -41,7 +41,7 @@ class MovieShowController extends Controller
 
     public function create(Request $request)
     {
-        $movies = Movie::where('status_id', 2)->get();
+        $movies =   movie::all();
         $theaters = Theater::all();
         $screens = collect();
 
@@ -74,21 +74,17 @@ class MovieShowController extends Controller
         return view('manager.movie_shows.show', ['show' => $movieShow]);
     }
 
-    public function edit(MovieShow $movieShow)
+    public function edit($id)
     {
-        $movies = Movie::where('status_id', 2)->get(); // Only active movies
+        $show = MovieShow::findOrFail($id);
+        $movies = Movie::orderBy('name')->get(); // جلب كل الأفلام
         $theaters = Theater::all();
-        $screens = Screen::where('theater_id', $movieShow->theater_id)->get();
-        
-        return view('manager.movie_shows.edit', [
-            'show' => $movieShow,
-            'movies' => $movies,
-            'theaters' => $theaters,
-            'screens' => $screens
-        ]);
+        $screens = Screen::where('theater_id', $show->theater_id)->get();
+
+        return view('manager.movie_shows.edit', compact('show', 'movies', 'theaters', 'screens'));
     }
 
-    public function update(Request $request, MovieShow $movieShow)
+    public function update(Request $request, $id)
     {
         $validated = $request->validate([
             'movie_id' => 'required|exists:movies,id',
@@ -99,6 +95,7 @@ class MovieShowController extends Controller
             'price' => 'required|numeric|min:0'
         ]);
 
+        $movieShow = MovieShow::findOrFail($id);
         $movieShow->update($validated);
 
         return redirect()->route('manager.movie-shows.index')

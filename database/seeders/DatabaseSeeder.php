@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +11,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        echo "===> DatabaseSeeder started\n";
+        // Truncate related tables before seeding
+        \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        \App\Models\Seat::truncate();
+        \App\Models\MovieShow::truncate();
+        \App\Models\Screen::truncate();
+        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        echo "===> ScreenShowSeatSeeder started\n";
+        $this->call(ScreenShowSeatSeeder::class);
+        echo "===> ScreenShowSeatSeeder finished\n";
+        echo "===> DatabaseSeeder finished\n";
     }
 }

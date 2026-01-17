@@ -4,45 +4,39 @@
 
     <div class="container">
         @if (!request('search'))
-            <!-- Carousel -->
-            <div id="mainCarousel" class="carousel slide carousel-container" data-bs-ride="carousel" data-bs-interval="2000">
-                <div class="carousel-inner">
-                    @php
-                        $moviesArray = $movies->all();
-                        $totalMovies = count($moviesArray);
-                        $itemsPerSlide = 4;
-                    @endphp
-                    @for ($i = 0; $i < $totalMovies; $i += $itemsPerSlide)
-                        <div class="carousel-item {{ $i === 0 ? 'active' : '' }}">
-                            <div class="row flex-nowrap">
-                                @for ($j = $i; $j < min($i + $itemsPerSlide, $totalMovies); $j++)
-                                    <div class="col-xl-3 col-md-4 col-6">
-                                        <a href="{{ route('movies.show', $moviesArray[$j]->id) }}">
-                                            @if ($moviesArray[$j]->img)
-                                                <img src="data:image/jpeg;base64,{{ base64_encode($moviesArray[$j]->img) }}"
-                                                    class="d-block w-100" alt="{{ $moviesArray[$j]->name }}"
-                                                    style="height: 300px; object-fit: cover;">
-                                            @else
-                                                <div class="bg-secondary rounded d-flex align-items-center justify-content-center"
-                                                    style="width: 100%; height: 300px;">
-                                                    <i class="fas fa-film text-white" style="font-size: 3rem;"></i>
-                                                </div>
-                                            @endif
-                                        </a>
+            <!-- Swiper Carousel -->
+            <div id="mainCarousel" class="swiper movie-swiper">
+                <div class="swiper-wrapper">
+                    @foreach($movies as $movie)
+                        <div class="swiper-slide">
+                            <a href="{{ route('movies.show', $movie->id) }}">
+                                <div class="position-relative">
+                                    @if ($movie->image)
+                                        <img src="{{ asset('img/movie/' . $movie->image) }}"
+                                             class="d-block w-100" alt="{{ $movie->name }}">
+                                    @else
+                                        <div class="bg-secondary rounded d-flex align-items-center justify-content-center"
+                                             style="width: 100%; height: 300px;">
+                                            <i class="fas fa-film text-white" style="font-size: 3rem;"></i>
+                                        </div>
+                                    @endif
+                                    <div class="position-absolute top-0 end-0 m-2">
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="fas fa-star"></i> {{ $movie->rating }}
+                                        </span>
                                     </div>
-                                @endfor
-                            </div>
+                                </div>
+                            </a>
                         </div>
-                    @endfor
+                    @endforeach
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
+                
+                <!-- Navigation -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                
+                <!-- Pagination -->
+                <div class="swiper-pagination"></div>
             </div>
 
             <!-- قسم الفلاتر -->
@@ -88,9 +82,9 @@
                     data-categories="{{ json_encode($movie->categories->pluck('id')) }}">
                     <a href="{{ route('movies.show', $movie->id) }}" class="text-decoration-none text-dark">
                         <div class="movie-card w-100 h-100">
-                            @if ($movie->img)
-                                <img src="data:image/jpeg;base64,{{ base64_encode($movie->img) }}"
-                                    alt="{{ $movie->name }}" class="movie-img" style="height: 300px; object-fit: cover;">
+                            @if ($movie->image)
+                                <img src="{{ asset('img/movie/' . $movie->image) }}"
+                                    alt="{{ $movie->name }}" class="movie-img">
                             @else
                                 <div class="bg-secondary rounded d-flex align-items-center justify-content-center"
                                     style="width: 100%; height: 300px;">
@@ -103,6 +97,11 @@
                                     <span class="badge bg-primary">
                                         {{ \Carbon\Carbon::parse($movie->release_date)->format('Y') }}
                                     </span>
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="fas fa-star"></i> {{ $movie->rating }}
+                                    </span>
+                                </div>
+                                <div class="mt-2">
                                     <span class="badge bg-secondary">
                                         {{ $movie->categories->pluck('name')->join(', ') }}
                                     </span>

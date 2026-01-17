@@ -23,31 +23,10 @@ class ClientProfileController extends Controller
             'date_of_birth' => ['required', 'date'],
             'gender' => ['required', 'in:male,female'],
             'phone_number' => ['required', 'string', 'max:20'],
-            'current_password' => ['nullable', 'string'],
-            'new_password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
 
         // Update basic information
-        $client->update([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'username' => $request->username,
-            'email' => $request->email,
-            'date_of_birth' => $request->date_of_birth,
-            'gender' => $request->gender,
-            'phone_number' => $request->phone_number,
-        ]);
-
-        // Update password if provided
-        if ($request->filled('new_password')) {
-            if (!Hash::check($request->current_password, $client->password)) {
-                return back()->withErrors(['current_password' => 'The provided password does not match your current password.']);
-            }
-            
-            $client->update([
-                'password' => Hash::make($request->new_password),
-            ]);
-        }
+        $client->update($request->all());
 
         return back()->with('profile_success', 'Profile updated successfully!');
     }

@@ -61,16 +61,25 @@ class ScreenController extends Controller
 
     public function destroy($theaterId, $screenId)
     {
-        $screen = Screen::findOrFail($screenId);
+        $screen = Screen::withCount('movieShows')->findOrFail($screenId);
 
-        // التحقق من عدم وجود عروض نشطة
-        if ($screen->activeShowsCount > 0) {
-            return back()->with('error', 'Cannot delete screen with active shows');
+        // أولاً، تحقق من وجود أي عروض مستقبلية. هذا يمنع أي إجراء.
+        $hasFutureShows = $screen->movieShows()->where('show_time', '>=', now())->exists();
+        if ($hasFutureShows) {
+            return back()->with('error', 'Cannot delete or deactivate this screen as it has upcoming shows. Please handle these shows first.');
         }
 
+        // إذا كانت الشاشة لها سجل عروض (سابقة فقط)، قم بتعطيلها بدلاً من حذفها.
+        if ($screen->movie_shows_count > 0) {
+            $screen->update(['status' => 'inactive']);
+            return redirect()->route('manager.theaters.screens.index', $theaterId)
+                ->with('success', 'Screen has been DEACTIVATED instead of deleted because it has a history of past shows.');
+        }
+
+        // إذا وصلت الشفرة إلى هنا، فهذا يعني أن الشاشة لم تُستخدم أبدًا. الحذف هنا آمن.
         $screen->delete();
 
         return redirect()->route('manager.theaters.screens.index', $theaterId)
-            ->with('success', 'Screen deleted successfully');
+            ->with('success', 'Screen deleted successfully as it was never used.');
     }
 }

@@ -1,0 +1,135 @@
+@startuml
+
+' Global Skin Parameters
+skinparam {
+    BackgroundColor #F8F8F8
+    Shadowing true
+    ArrowColor #2d4157
+    BorderColor #2d4157
+    FontName "Arial"
+    FontSize 12
+    RoundCorner 10
+    ArrowSize 1.5
+    MinClassWidth 150
+}
+
+' Define diamond style for relationship labels
+skinparam class {
+    BackgroundColor White
+    BorderColor #4CAF50
+}
+
+title "Cinema Management System - Database Schema (ERD)"
+
+' Tables definition
+class Admin {
+    +id : int <<PK>>
+    +first_name : string
+    +last_name : string
+    +username : string <<UQ>>
+    +email : string <<UQ>>
+    +password : string
+    +date_of_birth : date
+    +gender : string
+    +phone_number : string <<UQ>>
+    +email_verified_at : timestamp
+}
+
+class Manager {
+    +id : int <<PK>>
+    +first_name : string
+    +last_name : string
+    +username : string <<UQ>>
+    +email : string <<UQ>>
+    +password : string
+    +date_of_birth : date
+    +gender : string
+    +phone_number : string <<UQ>>
+    +email_verified_at : timestamp
+}
+
+class Client {
+    +id : int <<PK>>
+    +first_name : string
+    +last_name : string
+    +username : string <<UQ>>
+    +email : string <<UQ>>
+    +password : string
+    +date_of_birth : date
+    +gender : string
+    +phone_number : string <<UQ>>
+    +email_verified_at : timestamp
+}
+
+' Define relationship diamonds with <<D>> stereotype
+class makes <<D>>
+class includes <<D>>
+class has <<D>>
+class scheduled_in <<D>>
+class hosts <<D>>
+class displays <<D>>
+class has_status <<D>>
+class contains <<D>>
+class has_seats <<D>>
+class contains_screens <<D>>
+class reserved_for <<D>>
+class pending_for <<D>>
+
+' Style for diamond stereotype
+skinparam class<<D>> {
+    BackgroundColor White
+    BorderColor #2d4157
+    FontColor #2d4157
+    FontSize 10
+    FontStyle bold
+    DiagonalCorner 8
+}
+
+' Relationships using diamonds
+Client -- makes
+makes -- Booking
+
+Booking -- includes
+includes -- Ticket
+
+MovieShow -- has
+has -- Booking
+
+Movie -- scheduled_in
+scheduled_in -- MovieShow
+
+Theater -- hosts
+hosts -- MovieShow
+
+Screen -- displays
+displays -- MovieShow
+
+Movie -- has_status
+has_status -- Status
+
+Movie -- contains
+contains -- Trailer
+
+Screen -- has_seats
+has_seats -- Seat
+
+Theater -- contains_screens
+contains_screens -- Screen
+
+Seat -- reserved_for
+reserved_for -- Ticket
+
+MovieShow -- pending_for
+pending_for -- PendingPayment
+
+' Management relationships
+Admin "1" -- "many" Manager : supervises >
+Manager "1" -- "many" Movie : manages >
+Manager "1" -- "many" MovieShow : schedules >
+Manager "1" -- "many" Category : manages >
+Manager "1" -- "many" Theater : manages >
+Manager "1" -- "many" Screen : manages >
+Manager "1" -- "many" Seat : manages >
+Manager "1" -- "many" Trailer : manages >
+
+@enduml 

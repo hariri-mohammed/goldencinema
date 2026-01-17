@@ -40,8 +40,8 @@
                             <span class="row-label me-2 fw-bold">{{ $row }}</span>
                             @foreach($seats as $seat)
                                 @php
-                                    $seatTypeClass = $seat->type; // standard, vip, wheelchair, aisle
-                                    $seatStatusClass = $seat->status; // active, maintenance, inactive
+                                    $seatTypeClass = strtolower($seat->type);
+                                    $seatStatusClass = strtolower($seat->status);
                                     $isBookable = !$seat->isAisle() && $seat->status === 'active' && !in_array($seat->id, $bookedSeatIds);
                                     $seatTooltip = 'Row: ' . $seat->row . ', Number: ' . $seat->number . ' | Type: ' . ucfirst($seat->type) . ' | Status: ' . ucfirst($seat->status);
                                     if ($seat->type === 'vip') $seatTooltip .= ' (VIP)';
@@ -68,14 +68,14 @@
                 </div>
 
                 <div class="seat-legend mt-4 d-flex justify-content-center gap-3">
-                    <div class="legend-item"><span class="seat standard"></span> Standard</div>
-                    <div class="legend-item"><span class="seat vip"></span> VIP ({{ number_format($movieShow->price * 1.2, 2) }}$)</div>
-                    <div class="legend-item"><span class="seat wheelchair"></span> Wheelchair</div>
-                    <div class="legend-item"><span class="seat aisle"></span> Aisle</div>
-                    <div class="legend-item"><span class="seat active"></span> Active</div>
-                    <div class="legend-item"><span class="seat maintenance"></span> Maintenance</div>
-                    <div class="legend-item"><span class="seat inactive"></span> Inactive</div>
-                    <div class="legend-item"><span class="seat booked"></span> Booked</div>
+                    <div class="legend-item"><span class="seat standard legend-seat"></span> Standard</div>
+                    <div class="legend-item"><span class="seat vip legend-seat"></span> VIP ({{ number_format($movieShow->price * 1.2, 2) }}$)</div>
+                    <div class="legend-item"><span class="seat wheelchair legend-seat"></span> Wheelchair</div>
+                    <div class="legend-item"><span class="seat aisle legend-seat"></span> Aisle</div>
+                    <div class="legend-item"><span class="seat active legend-seat"></span> Active</div>
+                    <div class="legend-item"><span class="seat maintenance legend-seat"></span> Maintenance</div>
+                    <div class="legend-item"><span class="seat inactive legend-seat"></span> Inactive</div>
+                    <div class="legend-item"><span class="seat booked legend-seat"></span> Booked</div>
                 </div>
 
                 <div class="selected-seats-display mt-4 text-center">
@@ -135,49 +135,42 @@
         font-weight: bold;
         transition: background-color 0.2s, border-color 0.2s;
     }
-    .seat.standard {
-        background-color: #e9ecef;
-        color: #343a40;
-    }
-    .seat.vip {
-        background-color: #ffc107;
-        color: #343a40;
-    }
-    .seat.wheelchair {
-        background-color: #00bcd4;
-        color: #fff;
-    }
+    .seat.standard { background-color: #e9ecef !important; color: #343a40 !important; }
+    .seat.vip { background-color: #ffc107 !important; color: #343a40 !important; }
+    .seat.wheelchair { background-color: #00bcd4 !important; color: #fff !important; }
+    .seat.aisle { background-color: #6c757d !important; opacity: 0.5 !important; color: #fff !important; }
     .seat.active {
         border: 2px solid #28a745;
     }
     .seat.maintenance {
-        background-color: #fd7e14;
-        color: #fff;
-        border: 2px dashed #fd7e14;
+        background-color: #fd7e14 !important;
+        color: #fff !important;
+        border: 2px dashed #fd7e14 !important;
+        position: relative;
+    }
+    .seat.maintenance:not(.legend-seat)::after {
+        content: '\26A0';
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        font-size: 1em;
     }
     .seat.inactive {
-        background-color: #6c757d;
-        color: #fff;
-        border: 2px solid #6c757d;
+        background-color: #bdbdbd !important;
+        color: #fff !important;
+        border: 2px solid #6c757d !important;
+        opacity: 0.6 !important;
     }
     .seat.booked {
-        background-color: #dc3545;
-        color: white;
-        cursor: not-allowed;
-        border: 2px solid #dc3545;
+        background-color: #dc3545 !important;
+        color: white !important;
+        cursor: not-allowed !important;
+        border: 2px solid #dc3545 !important;
     }
     .seat.selected {
-        background-color: #28a745;
-        color: white;
-        border-color: #28a745;
-    }
-    .seat.aisle {
-        background-color: #6c757d;
-        cursor: default;
-        border-color: #6c757d;
-        opacity: 0.5;
-        width: 20px; /* Smaller for aisle */
-        margin: 5px 2px; /* Adjust margin */
+        background-color: #28a745 !important;
+        color: white !important;
+        border-color: #28a745 !important;
     }
     .seat-legend {
         display: flex;
@@ -205,6 +198,21 @@
         border-radius: 5px;
         margin: 2px;
         font-size: 0.9em;
+    }
+    #selected-seats-list span.standard {
+        background-color: #e9ecef;
+        color: #343a40;
+        border: 1px solid #ccc;
+    }
+    #selected-seats-list span.vip {
+        background-color: #ffc107;
+        color: #343a40;
+        border: 1px solid #bfa004;
+    }
+    #selected-seats-list span.wheelchair {
+        background-color: #00bcd4;
+        color: #fff;
+        border: 1px solid #0097a7;
     }
 </style>
 
@@ -250,11 +258,13 @@
             selectedSeatsList.innerHTML = '';
             selectedSeats.forEach((seat, id) => {
                 let price = seat.price;
+                let typeClass = seat.type.toLowerCase();
                 if (seat.type === 'vip') price *= 1.2;
                 currentTotal += price;
                 currentSelectedIds.push(id);
                 const seatTag = document.createElement('span');
                 seatTag.textContent = `${seat.name} (${number_format(price, 2)}$)`;
+                seatTag.className = typeClass;
                 selectedSeatsList.appendChild(seatTag);
             });
             selectedSeatsCount.textContent = selectedSeats.size;

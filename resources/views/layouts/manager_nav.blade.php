@@ -15,7 +15,7 @@
                     <x-nav-link :href="route('managerdashboard')" :active="request()->routeIs('managerdashboard') ? 'active' : ''">
                         {{ __(' Home') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('manager.theaters.index')" :active="request()->routeIs('movie.index') ? 'active' : ''">
+                    <x-nav-link :href="route('manager.theaters.index')" :active="request()->routeIs('manager.theaters.index') ? 'active' : ''">
                         {{ __(' Theaters') }}
                     </x-nav-link>
                     <x-nav-link :href="route('movie.index')" :active="request()->routeIs('movie.index') ? 'active' : ''">

@@ -19,8 +19,8 @@
                 <!-- Movie Information -->
                 <div class="col-md-4 text-center">
                     <div class="card h-100 border-0">
-                        @if($movie->img)
-                            <img src="data:image/jpeg;base64,{{ base64_encode($movie->img) }}"
+                        @if($movie->image)
+                            <img src="{{ asset('img/movie/' . $movie->image) }}"
                                  class="img-fluid rounded shadow-sm mx-auto d-block"
                                  alt="{{ $movie->name }}"
                                  style="width: 180px; height: 270px; object-fit: cover; margin-top: 15px;">
@@ -32,8 +32,13 @@
                         @endif
                         <div class="card-body">
                             <h5 class="card-title text-gray-800">{{ $movie->name }}</h5>
+                            <div class="mb-2">
+                                <span class="badge bg-warning text-dark">
+                                    <i class="fas fa-star"></i> {{ $movie->rating }}
+                                </span>
+                            </div>
                             <p class="card-text text-muted mb-0">
-                                {{ $movie->runtime }} minutes | {{ $movie->language }} | Rating: {{ $movie->rating }}
+                                {{ $movie->runtime }} minutes | {{ $movie->language }}
                             </p>
                         </div>
                     </div>

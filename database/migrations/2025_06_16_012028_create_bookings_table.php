@@ -18,9 +18,8 @@ return new class extends Migration
             $table->unsignedInteger('number_of_tickets');
             $table->decimal('total_price', 8, 2);
             $table->timestamp('booking_date');
-            $table->string('status')->default('pending'); // e.g., pending, confirmed, cancelled
+            $table->string('status')->default('confirmed'); // e.g., pending, confirmed, cancelled
             $table->string('payment_id')->nullable(); // For electronic payment transaction ID
-            $table->timestamp('reservation_expires_at')->nullable(); // When the temporary reservation expires
             $table->timestamps();
         });
     }

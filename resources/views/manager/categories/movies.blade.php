@@ -50,8 +50,8 @@
                             <tr>
                                 <td class="align-middle">
                                     <div class="d-flex align-items-center">
-                                        @if($movie->img)
-                                            <img src="data:image/jpeg;base64,{{ base64_encode($movie->img) }}"
+                                        @if($movie->image)
+                                            <img src="{{ asset('img/movie/' . $movie->image) }}"
                                                  alt="{{ $movie->name }}"
                                                  class="rounded me-2"
                                                  style="width: 40px; height: 60px; object-fit: cover;">

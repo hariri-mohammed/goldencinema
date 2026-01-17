@@ -1,0 +1,138 @@
+ملف شرح ManagerLoginRequest.php ودور الحارس (Guard) في Laravel
+====================================================
+
+1. ما هو ManagerLoginRequest؟
+----------------------------
+هو كلاس مخصص في Laravel من نوع FormRequest يُستخدم للتحقق من صحة بيانات تسجيل الدخول للمدير (Manager) وتنفيذ عملية تسجيل الدخول بشكل آمن ومنظم. هذا الكلاس يفصل منطق التحقق والمصادقة عن الكود الأساسي للـ Controller.
+
+2. شرح التوابع (الدوال) داخل ManagerLoginRequest.php مع شرح التعليمات البرمجية
+-------------------------------------------------------------------------------
+
+أ) التصريح (authorize)
+----------------------
+```php
+// هذه الدالة تحدد إذا كان يحق لهذا الطلب أن يُنفذ أم لا
+public function authorize(): bool
+{
+    // نسمح دائماً لأي شخص بمحاولة تسجيل الدخول (صفحة عامة)
+    return true;
+}
+```
+
+ب) قواعد التحقق (rules)
+------------------------
+```php
+// هذه الدالة تحدد قواعد التحقق من صحة البيانات المدخلة في النموذج
+public function rules(): array
+{
+    return [
+        // يجب أن يكون البريد الإلكتروني موجوداً، نصاً، وبصيغة بريد إلكتروني صحيحة
+        'email' => ['required', 'string', 'email'],
+        // يجب أن تكون كلمة المرور موجودة ونص
+        'password' => ['required', 'string'],
+    ];
+}
+```
+
+ج) محاولة تسجيل الدخول (authenticate)
+--------------------------------------
+```php
+// هذه الدالة تنفذ عملية تسجيل الدخول الفعلية للمدير
+public function authenticate(): void
+{
+    // تحقق أولاً من أنك لم تتجاوز عدد المحاولات المسموح بها
+    $this->ensureIsNotRateLimited();
+
+    // محاولة تسجيل الدخول باستخدام الحارس (manager) وبيانات البريد وكلمة المرور
+    if (! Auth::guard('manager')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        // إذا فشلت المحاولة، زد عداد المحاولات الفاشلة
+        RateLimiter::hit($this->throttleKey());
+        // أرسل رسالة خطأ للمستخدم
+        throw ValidationException::withMessages([
+            'email' => trans('auth.failed'),
+        ]);
+    }
+    // إذا نجحت المحاولة، امسح عداد المحاولات الفاشلة
+    RateLimiter::clear($this->throttleKey());
+}
+```
+
+د) حماية من كثرة المحاولات (ensureIsNotRateLimited)
+-----------------------------------------------------
+```php
+// هذه الدالة تحمي النظام من محاولات الدخول المتكررة (Brute Force)
+public function ensureIsNotRateLimited(): void
+{
+    // إذا لم تتجاوز الحد (5 محاولات)، أكمل عادي
+    if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        return;
+    }
+    // إذا تجاوزت الحد، أطلق حدث الحظر المؤقت
+    event(new Lockout($this));
+    // احسب كم ثانية يجب أن ينتظر المستخدم
+    $seconds = RateLimiter::availableIn($this->throttleKey());
+    // أرسل رسالة خطأ مع وقت الانتظار
+    throw ValidationException::withMessages([
+        'email' => trans('auth.throttle', [
+            'seconds' => $seconds,
+            'minutes' => ceil($seconds / 60),
+        ]),
+    ]);
+}
+```
+
+هـ) توليد مفتاح المحاولات (throttleKey)
+-----------------------------------------
+```php
+// هذه الدالة تولد مفتاح فريد لكل مستخدم بناءً على بريده وIP جهازه
+public function throttleKey(): string
+{
+    // نجمع البريد الإلكتروني (بعد تحويله لحروف صغيرة) مع عنوان الـ IP
+    return Str::transliterate(Str::lower($this->string('email')) . '|' . $this->ip());
+}
+```
+
+
+3. كيف يعمل الحارس (Guard) في Laravel؟
+----------------------------------------
+
+- الحارس هو المسؤول عن تحديد نوع المستخدم الذي يحاول تسجيل الدخول (مدير، عميل، أدمن...)
+- عند استخدام Auth::guard('manager')->attempt(...)، يبحث Laravel في جدول المدراء (managers) عن مستخدم يطابق البريد وكلمة المرور.
+
+4. كيف يتم تعريف الحارس (Guard)؟
+----------------------------------
+
+في ملف config/auth.php:
+
+'guards' => [
+    'web' => [
+        'driver' => 'session',
+        'provider' => 'users',
+    ],
+    'manager' => [
+        'driver' => 'session',
+        'provider' => 'managers',
+    ],
+],
+
+'providers' => [
+    'users' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\User::class,
+    ],
+    'managers' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Manager::class,
+    ],
+],
+
+- guard باسم 'manager' يستخدم provider اسمه 'managers'.
+- provider 'managers' يستخدم Model اسمه App\Models\Manager.
+- عند محاولة تسجيل الدخول، يبحث في جدول managers عن المستخدم.
+
+5. ملخص سريع
+--------------
+- ManagerLoginRequest يتحقق من صحة البيانات، يحمي من كثرة المحاولات، وينفذ تسجيل الدخول.
+- الحارس (manager) يحدد أين يبحث Laravel عن بيانات المدير.
+- تعريف الحارس يتم في config/auth.php.
+- كل شيء منظم وآمن وسهل التخصيص. 
