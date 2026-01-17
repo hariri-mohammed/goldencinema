@@ -281,34 +281,6 @@ php artisan cache:clear
 php artisan config:clear
 php artisan view:clear
 ```
-📸 Screenshot Titles Based on Your Routes
-🔐 1. Manager Login Page
-http://127.0.0.1:8000/manager/login
-
-🎫 2. Booking Confirmation Page
-http://127.0.0.1:8000/client/bookings/14
-
-🏠 3. Homepage – Cinema Dashboard
-http://127.0.0.1:8000/Goldencinema
-
-🎬 4. Movie Details Page
-http://127.0.0.1:8000/Goldencinema/movies/16
-
-🛠️ 5. Admin – Movie Management Dashboard
-http://127.0.0.1:8000/manager/movies
-
-📅 6. Admin – Show Scheduling Panel
-http://127.0.0.1:8000/manager/movie-shows
-
-✏️ 7. Admin – Edit Movie Page
-http://127.0.0.1:8000/manager/movies/16
-
-🪑 8. Seat Selection – Booking Interface
-http://127.0.0.1:8000/movie-shows/8/book
-
-👤 9. User Profile Page
-http://127.0.0.1:8000/manager/profile/2
-
 
 ### Conclusion
 GoldenCinema delivers a production-ready cinema management solution with secure authentication, comprehensive cinema operations management, and an intuitive online booking platform. It demonstrates professional Laravel development practices with clean code, proper architectural patterns, and user-friendly interfaces for all stakeholders in the cinema business.
@@ -639,34 +611,6 @@ php artisan cache:clear
 php artisan config:clear
 php artisan view:clear
 ```
-📸 Screenshot Titles Based on Your Routes
-🔐 1. Manager Login Page
-http://127.0.0.1:8000/manager/login
-
-🎫 2. Booking Confirmation Page
-http://127.0.0.1:8000/client/bookings/14
-
-🏠 3. Homepage – Cinema Dashboard
-http://127.0.0.1:8000/Goldencinema
-
-🎬 4. Movie Details Page
-http://127.0.0.1:8000/Goldencinema/movies/16
-
-🛠️ 5. Admin – Movie Management Dashboard
-http://127.0.0.1:8000/manager/movies
-
-📅 6. Admin – Show Scheduling Panel
-http://127.0.0.1:8000/manager/movie-shows
-
-✏️ 7. Admin – Edit Movie Page
-http://127.0.0.1:8000/manager/movies/16
-
-🪑 8. Seat Selection – Booking Interface
-http://127.0.0.1:8000/movie-shows/8/book
-
-👤 9. User Profile Page
-http://127.0.0.1:8000/manager/profile/2
-
 
 
 ### الخاتمة
